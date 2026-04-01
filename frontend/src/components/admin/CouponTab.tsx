@@ -1,0 +1,128 @@
+import { useState, useEffect } from 'react';
+import { Ticket, Search, Plus, X, Edit, Trash2, Loader2 } from 'lucide-react';
+import { fetchCoupons } from '../../services/api';
+
+interface Coupon {
+  id: number;
+  code: string;
+  discount: number;
+  type: string;
+  active: boolean;
+}
+
+export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const [name, setName] = useState('');
+  const [discount, setDiscount] = useState('');
+  const [active, setActive] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    setLoading(true);
+    const data = await fetchCoupons();
+    setCoupons(data);
+    setLoading(false);
+  };
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    onShowSuccess(editingId ? 'Cupom atualizado no WordPress!' : 'Cupom criado no WordPress!');
+    setShowForm(false);
+    resetForm();
+    loadData();
+  };
+
+  const resetForm = () => {
+    setEditingId(null); setName(''); setDiscount(''); setActive(true);
+  };
+
+  const openEdit = (c: Coupon) => {
+    setEditingId(c.id); setName(c.code); setDiscount(c.discount.toString()); setActive(c.active);
+    setShowForm(true);
+  };
+
+  if (loading) {
+    return <div className="h-full flex flex-col items-center justify-center p-12 text-premium-900"><Loader2 className="w-8 h-8 text-accent animate-spin mb-4"/><p className="font-serif text-lg">Buscando cupons no WooCommerce...</p></div>;
+  }
+
+  return (
+    <div className="flex flex-col h-full text-premium-900">
+      {showForm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-premium-900/60 backdrop-blur-sm" onClick={() => setShowForm(false)} />
+          <div className="relative bg-white w-full max-w-2xl p-8 rounded-sm shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-premium-900">
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-premium-100">
+              <h2 className="text-xl font-serif">{editingId ? 'Editar' : 'Novo'} Cupom</h2>
+              <button onClick={() => setShowForm(false)} className="text-premium-400 hover:text-premium-900"><X size={24}/></button>
+            </div>
+            <form onSubmit={handleSave} className="space-y-6">
+              <div className="grid grid-cols-2 gap-6">
+                <div className="col-span-2">
+                  <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Código do Cupom</label>
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent uppercase outline-none bg-white" />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Valor do Desconto</label>
+                  <input type="number" value={discount} onChange={e => setDiscount(e.target.value)} required className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent outline-none bg-white" />
+                </div>
+                <div className="col-span-2 flex items-center mt-2">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" checked={active} onChange={e => setActive(e.target.checked)} className="sr-only peer" />
+                    <div className="w-11 h-6 bg-premium-200 rounded-full peer peer-checked:bg-accent after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+                    <span className="ml-3 text-xs font-bold text-premium-700 uppercase tracking-widest">Cupom Ativo</span>
+                  </label>
+                </div>
+              </div>
+              <div className="pt-6 border-t border-premium-100 flex gap-4 justify-end">
+                <button type="button" onClick={() => setShowForm(false)} className="bg-white border border-premium-200 text-premium-700 px-8 py-2 text-xs font-bold uppercase rounded-sm">Cancelar</button>
+                <button type="submit" className="bg-premium-900 text-white px-8 py-2 text-xs font-bold uppercase rounded-sm shadow-md">Salvar no WordPress</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className="p-6 border-b border-premium-100 flex justify-between items-center shrink-0">
+        <div className="relative w-96"><Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-premium-400" /><input type="text" placeholder="Buscar cupons no WordPress..." className="w-full pl-10 pr-4 py-2 border border-premium-200 text-sm rounded-sm bg-premium-50 outline-none" /></div>
+        <div className="flex gap-4">
+          <button onClick={loadData} className="p-2 bg-white border border-premium-200 rounded-sm hover:bg-premium-50 transition-colors"><Loader2 className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} /></button>
+          <button onClick={() => { resetForm(); setShowForm(true); }} className="bg-premium-900 text-white px-6 py-2.5 flex items-center gap-2 text-xs font-bold uppercase rounded-sm shadow-md"><Plus size={16} /> Novo Cupom</button>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-auto">
+        {coupons.length === 0 ? (<div className="h-full flex flex-col items-center justify-center p-12 text-center text-premium-900"><Ticket size={40} className="text-premium-200"/><h3 className="mt-4 font-serif text-lg">Sem cupons no WooCommerce</h3></div>) : (
+          <table className="w-full text-left text-sm text-premium-900">
+            <thead className="text-[10px] text-premium-500 uppercase bg-premium-50 border-b border-premium-100 sticky top-0 z-10 font-bold tracking-widest uppercase"><tr><th className="px-6 py-4">Código</th><th className="px-6 py-4">Desconto</th><th className="px-6 py-4">Tipo</th><th className="px-6 py-4 text-right">Ações</th></tr></thead>
+            <tbody>
+              {coupons.map(c => (
+                <tr key={c.id} className="border-b border-premium-50 hover:bg-premium-50/50 group transition-colors">
+                  <td className="px-6 py-4 font-bold tracking-widest uppercase">{c.code}</td>
+                  <td className="px-6 py-4 text-accent font-bold">{c.discount}{c.type === 'percent' ? '%' : ' FIXO'}</td>
+                  <td className="px-6 py-4 text-premium-500 uppercase text-[10px]">{c.type === 'percent' ? 'Percentual' : 'Valor Fixo'}</td>
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button onClick={() => openEdit(c)} className="p-2 bg-premium-50 text-premium-600 hover:bg-premium-900 hover:text-white transition-all rounded-sm border border-premium-100" title="Editar">
+                        <Edit size={16}/>
+                      </button>
+                      <button onClick={() => onDeleteRequest('coupon', c.id, c.code)} className="p-2 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all rounded-sm border border-red-100" title="Excluir">
+                        <Trash2 size={16}/>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}

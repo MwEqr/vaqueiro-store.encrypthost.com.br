@@ -1,0 +1,86 @@
+import { Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { PRODUCTS } from '../data/mockProducts';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, FreeMode } from 'swiper/modules';
+// @ts-ignore
+import 'swiper/css';
+
+// Reusing mock products that have promotions
+const PROMO_PRODUCTS = PRODUCTS.filter(p => p.oldPrice).map(p => ({
+  ...p,
+  tag: `-${Math.round((1 - p.price / p.oldPrice!) * 100)}%`
+}));
+
+export default function PromoCarousel() {
+  return (
+    <section id="ofertas" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 overflow-hidden">
+      <div className="flex items-center justify-between mb-10 border-b border-premium-200 pb-4">
+        <div className="flex items-center space-x-3">
+          <Clock className="text-accent animate-pulse" size={28} />
+          <h2 className="text-2xl md:text-3xl font-serif font-semibold text-premium-900 uppercase tracking-widest">
+            Ofertas <span className="italic font-light text-accent-dark">Especiais</span>
+          </h2>
+        </div>
+        <Link to="/promocoes" className="text-premium-800 font-medium hover:text-accent-dark hover:underline transition-colors text-sm uppercase tracking-wider">
+          Ver todas
+        </Link>
+      </div>
+      
+      {/* Swiper Carousel for Infinite Autoplay & Manual Swiping */}
+      <div className="-mx-4 sm:mx-0 px-4 sm:px-0">
+        <Swiper
+          modules={[Autoplay, FreeMode]}
+          spaceBetween={24}
+          slidesPerView={'auto'}
+          freeMode={true}
+          loop={true}
+          speed={4000}
+          autoplay={{
+            delay: 0,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }}
+          className="pb-8 promo-swiper"
+        >
+          {PROMO_PRODUCTS.map((product) => (
+            <SwiperSlide key={product.id} className="!w-[260px] md:!w-[280px]">
+              <Link 
+                to={`/product/${product.id}`} 
+                className="group cursor-pointer flex flex-col h-full"
+              >
+                <div className="relative h-[320px] md:h-[360px] w-full overflow-hidden bg-premium-100 mb-4 rounded-sm flex-shrink-0">
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out"
+                  />
+                  <div className="absolute top-3 left-3 z-10">
+                    <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 bg-accent text-white shadow-md">
+                      {product.tag}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col flex-grow">
+                  <h3 className="text-base font-medium text-premium-900 group-hover:text-accent-dark transition-colors truncate">
+                    {product.name}
+                  </h3>
+                  <div className="mt-1 flex items-center gap-2">
+                    <span className="text-accent-dark font-bold">
+                      R$ {product.price.toFixed(2).replace('.', ',')}
+                    </span>
+                    {product.oldPrice && (
+                      <span className="text-premium-400 line-through text-sm">
+                        R$ {product.oldPrice.toFixed(2).replace('.', ',')}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta Vaqueiro Store: Branco, Marrom e Dourado */
+  --color-premium-50: #fbfbf9;   /* Fundo Off-white */
+  --color-premium-100: #f5f0e1;  /* Bege muito claro */
+  --color-premium-200: #e8dfc9;  /* Creme */
+  --color-premium-800: #3e2723;  /* Marrom profundo */
+  --color-premium-900: #1b0000;  /* Marrom quase preto */
+  
+  --color-accent-light: #d4af37; /* Dourado metálico claro */
+  --color-accent: #b8860b;       /* Dourado (Goldenrod) */
+  --color-accent-dark: #8b6508;  /* Dourado escuro */
+  
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-premium-50);
+    color: var(--color-premium-900); /* Texto escuro sobre fundo claro */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    color: var(--color-premium-900); /* Títulos em marrom escuro por padrão */
+  }
+}
+
+/* Custom Swiper Styles for Linear Autoplay */
+.promo-swiper .swiper-wrapper {
+  -webkit-transition-timing-function: linear !important;
+  -o-transition-timing-function: linear !important;
+  transition-timing-function: linear !important;
+}
