@@ -107,7 +107,7 @@ export default function ProductPage() {
                  )}
                  <div 
                    ref={scrollRef}
-                   className="flex gap-4 overflow-x-auto pb-2 scroll-smooth w-full"
+                   className="flex flex-nowrap gap-4 overflow-x-auto pb-2 scroll-smooth w-full"
                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                  >
                     {product.images.map((img: string, i: number) => (
