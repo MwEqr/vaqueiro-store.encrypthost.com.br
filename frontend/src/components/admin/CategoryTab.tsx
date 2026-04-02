@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { List, Search, X, Edit, Trash2, Loader2 } from 'lucide-react';
-import { fetchCategories } from '../../services/api';
+import { fetchCategories, saveCategory } from '../../services/api';
 
 interface Category {
   id: number;
@@ -13,18 +13,20 @@ interface CategoryTabProps {
   onShowSuccess: (msg: string) => void;
   onDeleteRequest: (type: string, id: number, name: string) => void;
   refreshCategories: () => void;
+  refreshTrigger: number;
 }
 
-export default function CategoryTab({ onShowSuccess, onDeleteRequest, refreshCategories }: CategoryTabProps) {
+export default function CategoryTab({ onShowSuccess, onDeleteRequest, refreshCategories, refreshTrigger }: CategoryTabProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [name, setName] = useState('');
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [refreshTrigger]);
 
   const loadData = async () => {
     setLoading(true);
@@ -33,15 +35,22 @@ export default function CategoryTab({ onShowSuccess, onDeleteRequest, refreshCat
     setLoading(false);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulação de salvar no WooCommerce
-    onShowSuccess(editingId ? 'Categoria atualizada no WordPress!' : 'Categoria criada no WordPress!');
-    setShowForm(false);
-    setName('');
-    setEditingId(null);
-    loadData();
-    refreshCategories(); // Atualiza a lista global do Dashboard (usada no seletor de produtos)
+    setSaving(true);
+    try {
+      await saveCategory({ id: editingId, name }, editingId ? 'PUT' : 'POST');
+      onShowSuccess(editingId ? 'Categoria atualizada no WordPress!' : 'Categoria criada no WordPress!');
+      setShowForm(false);
+      setName('');
+      setEditingId(null);
+      loadData();
+      refreshCategories(); // Atualiza a lista global do Dashboard (usada no seletor de produtos)
+    } catch (err) {
+      alert("Erro ao salvar categoria.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const openEdit = (c: Category) => {
@@ -66,7 +75,7 @@ export default function CategoryTab({ onShowSuccess, onDeleteRequest, refreshCat
             </div>
             <form onSubmit={handleSave} className="space-y-6 text-premium-900">
               <div><label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase tracking-widest">Nome da Categoria</label><input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent outline-none bg-white text-premium-900" /></div>
-              <div className="pt-6 border-t border-premium-100 flex gap-4 justify-end text-premium-900"><button type="button" onClick={() => setShowForm(false)} className="bg-white border border-premium-200 text-premium-700 px-8 py-2 text-xs font-bold uppercase rounded-sm">Cancelar</button><button type="submit" className="bg-premium-900 text-white px-8 py-2 text-xs font-bold uppercase rounded-sm shadow-md">Salvar no WordPress</button></div>
+              <div className="pt-6 border-t border-premium-100 flex gap-4 justify-end text-premium-900"><button type="button" onClick={() => setShowForm(false)} className="bg-white border border-premium-200 text-premium-700 px-8 py-2 text-xs font-bold uppercase rounded-sm">Cancelar</button><button type="submit" disabled={saving} className="bg-premium-900 text-white px-8 py-2 text-xs font-bold uppercase rounded-sm shadow-md flex items-center gap-2">{saving ? <Loader2 className="w-4 h-4 animate-spin"/> : null} Salvar no WordPress</button></div>
             </form>
           </div>
         </div>

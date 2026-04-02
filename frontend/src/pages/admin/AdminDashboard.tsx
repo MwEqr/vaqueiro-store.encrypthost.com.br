@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Package, List, Ticket, LogOut, LayoutDashboard, X, CheckCircle, AlertCircle } from 'lucide-react';
+import { Package, List, Ticket, LogOut, LayoutDashboard, X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import ProductTab from '../../components/admin/ProductTab';
 import CategoryTab from '../../components/admin/CategoryTab';
 import CouponTab from '../../components/admin/CouponTab';
-import { fetchCategories } from '../../services/api';
+import { fetchCategories, deleteProduct, deleteCategory, deleteCoupon } from '../../services/api';
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('produtos');
@@ -13,14 +13,16 @@ export default function AdminDashboard() {
 
   // Categories shared state
   const [categories, setCategories] = useState<{id: number, name: string}[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [deleteModal, setDeleteModal] = useState<{type: string, id: number, name: string} | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [refreshTrigger]);
 
   const loadCategories = async () => {
     const data = await fetchCategories();
@@ -35,6 +37,24 @@ export default function AdminDashboard() {
 
   const handleDeleteRequest = (type: string, id: number, name: string) => {
     setDeleteModal({ type, id, name });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal) return;
+    setIsDeleting(true);
+    try {
+      if (deleteModal.type === 'product') await deleteProduct(deleteModal.id);
+      if (deleteModal.type === 'category') await deleteCategory(deleteModal.id);
+      if (deleteModal.type === 'coupon') await deleteCoupon(deleteModal.id);
+      
+      showSuccess('Item excluído com sucesso!');
+      setRefreshTrigger(prev => prev + 1); // Trigger re-render of child tabs
+    } catch (err) {
+      alert("Erro ao excluir item. Verifique a conexão.");
+    } finally {
+      setIsDeleting(false);
+      setDeleteModal(null);
+    }
   };
 
   const TABS = [
@@ -61,8 +81,10 @@ export default function AdminDashboard() {
             <h2 className="text-xl font-serif mb-2">Excluir?</h2>
             <p className="text-sm text-premium-600 mb-6">Deseja excluir <strong>{deleteModal.name}</strong> no WordPress?</p>
             <div className="flex gap-3 justify-center">
-              <button onClick={() => setDeleteModal(null)} className="px-6 py-2.5 border text-sm font-medium rounded-sm">Cancelar</button>
-              <button onClick={() => { setDeleteModal(null); showSuccess('Item excluído!'); }} className="px-6 py-2.5 bg-red-500 text-white text-sm font-medium rounded-sm">Excluir</button>
+              <button onClick={() => setDeleteModal(null)} className="px-6 py-2.5 border text-sm font-medium rounded-sm" disabled={isDeleting}>Cancelar</button>
+              <button onClick={confirmDelete} disabled={isDeleting} className="px-6 py-2.5 bg-red-500 text-white text-sm font-medium rounded-sm flex items-center gap-2">
+                {isDeleting ? <Loader2 className="w-4 h-4 animate-spin"/> : null} Excluir
+              </button>
             </div>
           </div>
         </div>
@@ -98,9 +120,9 @@ export default function AdminDashboard() {
 
         <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col">
           <div className="bg-white rounded-sm shadow-sm border border-premium-100 flex-1 flex flex-col overflow-hidden relative text-premium-900">
-            {activeTab === 'produtos' && <ProductTab categories={categories} onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} />}
-            {activeTab === 'categorias' && <CategoryTab onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} refreshCategories={loadCategories} />}
-            {activeTab === 'cupons' && <CouponTab onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} />}
+            {activeTab === 'produtos' && <ProductTab categories={categories} refreshTrigger={refreshTrigger} onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} />}
+            {activeTab === 'categorias' && <CategoryTab refreshTrigger={refreshTrigger} onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} refreshCategories={loadCategories} />}
+            {activeTab === 'cupons' && <CouponTab refreshTrigger={refreshTrigger} onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} />}
           </div>
         </div>
       </main>

@@ -13,7 +13,7 @@ interface Coupon {
   usage_limit: number | null;
 }
 
-export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
+export default function CouponTab({ onShowSuccess, onDeleteRequest, refreshTrigger }: any) {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -29,7 +29,7 @@ export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [refreshTrigger]);
 
   const loadData = async () => {
     setLoading(true);

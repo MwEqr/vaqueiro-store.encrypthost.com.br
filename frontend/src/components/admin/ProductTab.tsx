@@ -18,7 +18,7 @@ interface Product {
   active: boolean;
 }
 
-export default function ProductTab({ categories, onShowSuccess, onDeleteRequest }: any) {
+export default function ProductTab({ categories, onShowSuccess, onDeleteRequest, refreshTrigger }: any) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -42,7 +42,7 @@ export default function ProductTab({ categories, onShowSuccess, onDeleteRequest 
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [refreshTrigger]);
 
   // Automatically calculate Sale Price when Discount % or Price changes
   useEffect(() => {

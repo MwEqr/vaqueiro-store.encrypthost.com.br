@@ -26,6 +26,18 @@ export const fetchCategories = async () => {
   }
 };
 
+export const saveCategory = async (category: any, method: 'POST' | 'PUT') => {
+  const res = await fetch(`${API_URL}categories`, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(category) });
+  if (!res.ok) throw new Error('Failed to save category');
+  return res.json();
+};
+
+export const deleteCategory = async (id: number) => {
+  const res = await fetch(`${API_URL}categories?id=${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete category');
+  return res.json();
+};
+
 export const fetchCoupons = async () => {
   try {
     const response = await fetch(`${API_URL}coupons`);
