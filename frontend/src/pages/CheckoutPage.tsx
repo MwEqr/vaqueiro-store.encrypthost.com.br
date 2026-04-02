@@ -137,8 +137,8 @@ export default function CheckoutPage() {
       } else {
         showToast('Erro ao gerar o link de pagamento. Verifique as configurações do Mercado Pago no WordPress.', 'error');
       }
-    } catch (err) {
-      showToast('Erro de conexão ao processar o pagamento.', 'error');
+    } catch (err: any) {
+      showToast(err.message || 'Erro de conexão ao processar o pagamento.', 'error');
     } finally {
       setLoadingCheckout(false);
     }
