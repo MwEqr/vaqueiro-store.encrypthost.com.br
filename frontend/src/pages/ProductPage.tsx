@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Star, Shield, Package, RotateCcw, ShoppingBag, Info, ArrowLeft } from 'lucide-react';
+import { Star, Shield, Package, RotateCcw, ShoppingBag, Info, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { PRODUCTS as MOCK_PRODUCTS } from '../data/mockProducts';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
@@ -18,6 +18,15 @@ export default function ProductPage() {
   const [selectedColor, setSelectedColor] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState('');
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scrollThumbnails = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount = current.clientWidth / 2;
+      current.scrollBy({ left: direction === 'left' ? -scrollAmount : scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     const getProduct = async () => {
@@ -87,16 +96,38 @@ export default function ProductPage() {
                    className="w-full h-full object-cover object-center" 
                  />
               </div>
-              <div className="grid grid-cols-4 gap-4">
-                 {product.images.map((img: string, i: number) => (
+              <div className="relative group flex items-center">
+                 {product.images?.length > 3 && (
                    <button 
-                     key={i} 
-                     onClick={() => setMainImage(img)}
-                     className={`aspect-square rounded-sm border-2 overflow-hidden transition-all ${mainImage === img ? 'border-accent opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                     onClick={() => scrollThumbnails('left')}
+                     className="absolute -left-3 z-10 bg-white shadow-md border border-premium-200 rounded-full p-1.5 text-premium-600 hover:text-premium-900 transition-colors opacity-0 group-hover:opacity-100"
                    >
-                      <img src={img} alt={`Miniatura ${i+1}`} className="w-full h-full object-cover" />
+                     <ChevronLeft size={20} />
                    </button>
-                 ))}
+                 )}
+                 <div 
+                   ref={scrollRef}
+                   className="flex gap-4 overflow-x-auto pb-2 scroll-smooth w-full"
+                   style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                 >
+                    {product.images.map((img: string, i: number) => (
+                      <button 
+                        key={i} 
+                        onClick={() => setMainImage(img)}
+                        className={`aspect-square w-20 md:w-24 shrink-0 rounded-sm border-2 overflow-hidden transition-all ${mainImage === img ? 'border-accent opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
+                      >
+                         <img src={img} alt={`Miniatura ${i+1}`} className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                 </div>
+                 {product.images?.length > 3 && (
+                   <button 
+                     onClick={() => scrollThumbnails('right')}
+                     className="absolute -right-3 z-10 bg-white shadow-md border border-premium-200 rounded-full p-1.5 text-premium-600 hover:text-premium-900 transition-colors opacity-0 group-hover:opacity-100"
+                   >
+                     <ChevronRight size={20} />
+                   </button>
+                 )}
               </div>
            </motion.div>
 
