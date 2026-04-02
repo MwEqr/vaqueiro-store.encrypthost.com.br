@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { List, Search, Plus, X, Edit, Trash2, Loader2 } from 'lucide-react';
+import { List, Search, X, Edit, Trash2, Loader2 } from 'lucide-react';
 import { fetchCategories } from '../../services/api';
 
 interface Category {

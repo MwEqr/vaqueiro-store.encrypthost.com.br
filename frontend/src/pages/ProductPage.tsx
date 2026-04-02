@@ -88,7 +88,7 @@ export default function ProductPage() {
                  />
               </div>
               <div className="grid grid-cols-4 gap-4">
-                 {product.images.map((img, i) => (
+                 {product.images.map((img: string, i: number) => (
                    <button 
                      key={i} 
                      onClick={() => setMainImage(img)}
@@ -159,7 +159,7 @@ export default function ProductPage() {
                       <span className="text-xs text-premium-600">{selectedColor}</span>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                       {product.colors.map(color => (
+                       {product.colors.map((color: string) => (
                          <button
                            key={color}
                            onClick={() => setSelectedColor(color)}
@@ -184,7 +184,7 @@ export default function ProductPage() {
                       </button>
                     </div>
                     <div className="flex flex-wrap gap-3">
-                       {product.sizes.map(size => (
+                       {product.sizes.map((size: string) => (
                          <button
                            key={size}
                            onClick={() => setSelectedSize(size)}

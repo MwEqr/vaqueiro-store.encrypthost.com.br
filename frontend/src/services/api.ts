@@ -1,10 +1,12 @@
 // C:\Users\henri\Desktop\vaqueiro-store\frontend\src\services\api.ts
 
-const API_URL = '/api/index.php';
+// Usamos o caminho completo para o arquivo index.php com um parâmetro de rota.
+// Isso evita problemas de configuração de "Pretty URLs" no Nginx/Apache da VPS.
+const API_URL = '/backend/index.php?route=';
 
 export const fetchProducts = async () => {
   try {
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetch(`${API_URL}products`);
     if (!response.ok) throw new Error('Failed to fetch products');
     return await response.json();
   } catch (error) {
@@ -15,7 +17,7 @@ export const fetchProducts = async () => {
 
 export const fetchCategories = async () => {
   try {
-    const response = await fetch(`${API_URL}/categories`);
+    const response = await fetch(`${API_URL}categories`);
     if (!response.ok) throw new Error('Failed to fetch categories');
     return await response.json();
   } catch (error) {
@@ -26,7 +28,7 @@ export const fetchCategories = async () => {
 
 export const fetchCoupons = async () => {
   try {
-    const response = await fetch(`${API_URL}/coupons`);
+    const response = await fetch(`${API_URL}coupons`);
     if (!response.ok) throw new Error('Failed to fetch coupons');
     return await response.json();
   } catch (error) {
@@ -37,7 +39,7 @@ export const fetchCoupons = async () => {
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await fetch(`${API_URL}/auth`, {
+    const response = await fetch(`${API_URL}auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'login', email, password })
@@ -51,7 +53,7 @@ export const login = async (email: string, password: string) => {
 
 export const register = async (name: string, email: string, password: string) => {
   try {
-    const response = await fetch(`${API_URL}/auth`, {
+    const response = await fetch(`${API_URL}auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'register', name, email, password })

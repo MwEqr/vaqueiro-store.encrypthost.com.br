@@ -1,13 +1,6 @@
-import { useState, useRef, useEffect } from 'react';
-import { Package, Search, Plus, X, Edit, Trash2, Upload, Image as ImageIcon, Sparkles, Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Package, Search, Plus, X, Edit, Trash2, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { fetchProducts } from '../../services/api';
-
-interface ProductVariant {
-  id: string;
-  size: string;
-  color: string;
-  overridePrice: string;
-}
 
 interface Product {
   id: number;
@@ -30,14 +23,9 @@ export default function ProductTab({ categories, onShowSuccess, onDeleteRequest 
   // Form states
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
-  const [discount, setDiscount] = useState(''); // Simulated for UI
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState('');
-  const [images, setImages] = useState<string[]>([]);
-  const [active, setActive] = useState(true);
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     loadProducts();
@@ -61,7 +49,7 @@ export default function ProductTab({ categories, onShowSuccess, onDeleteRequest 
   };
 
   const resetForm = () => {
-    setEditingId(null); setName(''); setPrice(''); setCategory(categories[0]?.name || ''); setDescription(''); setImage(''); setImages([]); setActive(true);
+    setEditingId(null); setName(''); setPrice(''); setCategory(categories[0]?.name || ''); setDescription(''); setImage('');
   };
 
   const openEdit = (p: any) => {
@@ -71,8 +59,6 @@ export default function ProductTab({ categories, onShowSuccess, onDeleteRequest 
     setCategory(p.category);
     setDescription(p.description);
     setImage(p.image);
-    setImages(p.images);
-    setActive(true);
     setShowForm(true);
   };
 

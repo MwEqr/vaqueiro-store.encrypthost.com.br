@@ -13,14 +13,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 require_once 'config/db.php';
 
-// Pega apenas a parte final da URL (ex: /products)
-$request_uri = $_SERVER['REQUEST_URI'];
-$script_name = $_SERVER['SCRIPT_NAME'];
-$base_path = str_replace('index.php', '', $script_name);
-$endpoint = str_replace($base_path, '', $request_uri);
-$endpoint = '/' . ltrim(explode('?', $endpoint)[0], '/');
-$endpoint = str_replace('index.php/', '', $endpoint);
-$endpoint = '/' . ltrim($endpoint, '/');
+// Pega o endpoint via parâmetro 'route' ou pela URL amigável
+$endpoint = isset($_GET['route']) ? '/' . $_GET['route'] : '';
+
+if (empty($endpoint)) {
+    $request_uri = $_SERVER['REQUEST_URI'];
+    $script_name = $_SERVER['SCRIPT_NAME'];
+    $base_path = str_replace('index.php', '', $script_name);
+    $path = str_replace($base_path, '', $request_uri);
+    $endpoint = '/' . ltrim(explode('?', $path)[0], '/');
+    $endpoint = str_replace('index.php/', '', $endpoint);
+    $endpoint = '/' . ltrim($endpoint, '/');
+}
 
 // Roteador
 switch ($endpoint) {
@@ -32,11 +36,12 @@ switch ($endpoint) {
         break;
     case '/coupons':
         require 'api/coupons.php';
+        break;
     case '/auth':
         require 'api/auth.php';
         break;
     default:
         http_response_code(404);
-        echo json_encode(["message" => "Endpoint nao encontrado", "path" => $endpoint]);
+        echo json_encode(["error" => "Rota nao encontrada", "endpoint" => $endpoint]);
         break;
 }
