@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { ShieldCheck, Ticket, Loader2, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,18 +50,27 @@ export default function CheckoutPage() {
   const [loadingCheckout, setLoadingCheckout] = useState(false);
 
   // Carrega dados do usuario se estiver logado
-  useState(() => {
+  useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      const parsed = JSON.parse(storedUser);
-      setEmail(parsed.email || '');
-      const nameParts = (parsed.name || '').split(' ');
-      setFirstName(nameParts[0] || '');
-      if (nameParts.length > 1) {
-        setLastName(nameParts.slice(1).join(' '));
+      try {
+        const parsed = JSON.parse(storedUser);
+        if (parsed.email) setEmail(parsed.email);
+        
+        if (parsed.name) {
+          const nameParts = parsed.name.trim().split(' ');
+          if (nameParts.length > 0) {
+            setFirstName(nameParts[0]);
+            if (nameParts.length > 1) {
+              setLastName(nameParts.slice(1).join(' '));
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao ler dados do usuário logado", e);
       }
     }
-  });
+  }, []);
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
