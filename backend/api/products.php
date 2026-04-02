@@ -1,10 +1,15 @@
 <?php
 // C:\Users\henri\Desktop\vaqueiro-store\backend\api\products.php
 
+if (!function_exists('curl_init')) {
+    http_response_code(500);
+    echo json_encode(["error" => "Extensao CURL nao instalada no servidor PHP da VPS"]);
+    exit;
+}
+
 require_once __DIR__ . '/../config/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Buscar produtos via WooCommerce REST API
     $url = WC_STORE_URL . '/wp-json/wc/v3/products';
     $auth = base64_encode(WC_CONSUMER_KEY . ':' . WC_CONSUMER_SECRET);
 
@@ -15,17 +20,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         'Authorization: Basic ' . $auth,
         'Content-Type: application/json'
     ]);
-    // Disable SSL verification for localhost if needed
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
     $response = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
     curl_close($ch);
 
     if ($http_code === 200) {
         $wc_products = json_decode($response);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            echo json_encode(["error" => "WooCommerce retornou dados invalidos", "raw" => substr($response, 0, 200)]);
+            exit;
+        }
+        
         $formatted_products = [];
-
         foreach ($wc_products as $product) {
             $formatted_products[] = [
                 'id' => $product->id,
@@ -37,25 +47,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 'images' => array_map(function($img) { return $img->src; }, $product->images),
                 'rating' => (float)$product->average_rating,
                 'reviews' => $product->review_count,
-                'sizes' => ['P', 'M', 'G', 'GG'], // WooCommerce variações poderiam ser mapeadas aqui
+                'sizes' => ['P', 'M', 'G', 'GG'],
                 'colors' => ['Natural', 'Marrom', 'Preto'],
                 'description' => strip_tags($product->description),
-                'details' => [
-                    'material' => 'Couro Legítimo',
-                    'forro' => 'Interno Confort',
-                    'cuidados' => 'Limpar com pano úmido',
-                    'origem' => 'Nacional'
-                ],
                 'tag' => $product->on_sale ? 'Promoção' : null
             ];
         }
-
         echo json_encode($formatted_products);
     } else {
-        http_response_code($http_code);
-        echo json_encode(["error" => "Falha ao buscar produtos no WooCommerce", "details" => $response]);
+        http_response_code($http_code ?: 500);
+        echo json_encode([
+            "error" => "Erro ao conectar no WooCommerce", 
+            "http_code" => $http_code,
+            "curl_error" => $error,
+            "wc_url" => $url
+        ]);
     }
-} else {
-    http_response_code(405);
-    echo json_encode(["message" => "Method not allowed"]);
 }

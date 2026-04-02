@@ -6,8 +6,9 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
 
-// Desativar exibição de erros HTML para não quebrar o JSON do React
+// Bloqueia qualquer erro HTML de sair e quebrar o React
 ini_set('display_errors', 0);
+ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
@@ -16,21 +17,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 }
 
 try {
+    if (!file_exists('config/db.php')) {
+        throw new Exception("Arquivo config/db.php nao encontrado");
+    }
     require_once 'config/db.php';
 
-    // Tenta descobrir o endpoint de forma flexível
     $request_uri = $_SERVER['REQUEST_URI'];
-    
+    $parts = explode('/', trim($request_uri, '/'));
+    $endpoint = '/' . end($parts);
+    $endpoint = explode('?', $endpoint)[0];
+
+    // Se o Nginx passar via query string ?route=
     if (isset($_GET['route'])) {
         $endpoint = '/' . $_GET['route'];
-    } else {
-        // Se vier como /api/products ou /backend/products
-        $parts = explode('/', trim($request_uri, '/'));
-        $endpoint = '/' . end($parts);
     }
-
-    // Limpa query string do endpoint se existir
-    $endpoint = explode('?', $endpoint)[0];
 
     switch ($endpoint) {
         case '/products':
@@ -41,7 +41,7 @@ try {
             break;
         case '/coupons':
             require 'api/coupons.php';
-            break;
+            break; // Break adicionado
         case '/auth':
             require 'api/auth.php';
             break;
@@ -52,5 +52,8 @@ try {
     }
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(["error" => "Erro interno no servidor", "message" => $e->getMessage()]);
+    echo json_encode([
+        "error" => "Erro critico no Backend",
+        "message" => $e->getMessage()
+    ]);
 }
