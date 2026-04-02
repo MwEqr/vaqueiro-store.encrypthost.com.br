@@ -17,8 +17,11 @@ $auth = base64_encode(WC_CONSUMER_KEY . ':' . WC_CONSUMER_SECRET);
 // Prepara os itens do pedido
 $line_items = [];
 foreach ($data['items'] as $item) {
+    // O carrinho do React salva o ID real do produto em 'productId'. A chave 'id' é um timestamp (Date.now())
+    $real_product_id = isset($item['productId']) ? $item['productId'] : $item['id'];
+    
     $line_items[] = [
-        'product_id' => $item['id'],
+        'product_id' => $real_product_id,
         'quantity' => $item['quantity'],
         'total' => (string)($item['price'] * $item['quantity']) // Força o preço do React para evitar R$ 0.00 no WooCommerce
     ];
@@ -170,6 +173,8 @@ if ($code === 201 || $code === 200) {
         'payment_url' => $payment_url
     ]);
 } else {
+    // Registra o erro do WooCommerce para debug
+    file_put_contents(__DIR__ . '/checkout_error.log', date('Y-m-d H:i:s') . "\nPayload: " . json_encode($payload) . "\nResponse: " . $res . "\n\n", FILE_APPEND);
     http_response_code($code);
     echo $res;
 }
