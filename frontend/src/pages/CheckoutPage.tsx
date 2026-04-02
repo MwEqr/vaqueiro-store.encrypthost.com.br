@@ -30,6 +30,10 @@ export default function CheckoutPage() {
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Form states
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
   const [cpfError, setCpfError] = useState('');
   
@@ -37,11 +41,27 @@ export default function CheckoutPage() {
   const [rua, setRua] = useState('');
   const [cidade, setCidade] = useState('');
   const [estado, setEstado] = useState('');
+  const [numero, setNumero] = useState('');
+  const [complemento, setComplemento] = useState('');
   const [cepError, setCepError] = useState('');
   
   const [freight, setFreight] = useState(0);
   const [freightLoading, setFreightLoading] = useState(false);
   const [loadingCheckout, setLoadingCheckout] = useState(false);
+
+  // Carrega dados do usuario se estiver logado
+  useState(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser);
+      setEmail(parsed.email || '');
+      const nameParts = (parsed.name || '').split(' ');
+      setFirstName(nameParts[0] || '');
+      if (nameParts.length > 1) {
+        setLastName(nameParts.slice(1).join(' '));
+      }
+    }
+  });
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
@@ -116,14 +136,15 @@ export default function CheckoutPage() {
       freight,
       coupon: discount > 0 ? couponCode : null,
       customer: {
-        firstName: 'Cliente',
-        lastName: 'Vaqueiro',
-        email: 'cliente@vaqueirostore.com',
-        phone: '11999999999',
+        firstName: firstName || 'Cliente',
+        lastName: lastName || 'Vaqueiro',
+        email: email || 'cliente@vaqueirostore.com',
+        phone: phone || '11999999999',
         cpf: cpf,
         cep: cep,
         address: rua,
-        complement: '',
+        numero: numero,
+        complement: complemento,
         city: cidade,
         state: estado
       }
@@ -285,7 +306,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-premium-700 mb-1">Telefone / WhatsApp</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="(00) 00000-0000" />
+                    <input type="text" value={phone} onChange={e => setPhone(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="(00) 00000-0000" />
                   </div>
                 </div>
               </div>
@@ -315,12 +336,12 @@ export default function CheckoutPage() {
                   </div>
                   <div className="col-span-1">
                     <label className="block text-xs font-medium text-premium-700 mb-1">Número</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
+                    <input type="text" value={numero} onChange={e => setNumero(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-premium-700 mb-1">Complemento (Opcional)</label>
-                  <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="Apto, Bloco, etc" />
+                  <input type="text" value={complemento} onChange={e => setComplemento(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="Apto, Bloco, etc" />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>

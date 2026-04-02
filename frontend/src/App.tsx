@@ -10,6 +10,7 @@ import ProductPage from './pages/ProductPage';
 import CheckoutPage from './pages/CheckoutPage';
 import CollectionPage from './pages/CollectionPage';
 import PromotionsPage from './pages/PromotionsPage';
+import ProfilePage from './pages/ProfilePage';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 
@@ -65,6 +66,7 @@ export default function App() {
             <Route path="/promocoes" element={<PromotionsPage />} />
             <Route path="/product/:id" element={<ProductPage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Routes>

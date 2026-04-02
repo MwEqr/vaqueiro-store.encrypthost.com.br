@@ -118,3 +118,25 @@ export const createOrder = async (payload: any) => {
   if (!res.ok) throw new Error('Falha ao criar o pedido');
   return res.json();
 };
+
+export const fetchOrders = async (customerId?: string) => {
+  try {
+    const url = customerId ? `${API_URL}orders?customer=${customerId}` : `${API_URL}orders`;
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Failed to fetch orders');
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    return [];
+  }
+};
+
+export const updateOrderStatus = async (id: number, status: string) => {
+  const res = await fetch(`${API_URL}orders`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, status })
+  });
+  if (!res.ok) throw new Error('Failed to update order');
+  return res.json();
+};

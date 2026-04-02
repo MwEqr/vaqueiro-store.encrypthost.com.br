@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Package, List, Ticket, LogOut, LayoutDashboard, X, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Package, List, Ticket, LogOut, LayoutDashboard, X, CheckCircle, AlertCircle, Loader2, ShoppingBag } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import ProductTab from '../../components/admin/ProductTab';
 import CategoryTab from '../../components/admin/CategoryTab';
 import CouponTab from '../../components/admin/CouponTab';
+import OrderTab from '../../components/admin/OrderTab';
 import { fetchCategories, deleteProduct, deleteCategory, deleteCoupon } from '../../services/api';
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState('produtos');
+  const [activeTab, setActiveTab] = useState('pedidos');
   const navigate = useNavigate();
 
   // Categories shared state
@@ -58,6 +59,7 @@ export default function AdminDashboard() {
   };
 
   const TABS = [
+    { id: 'pedidos', label: 'Pedidos', icon: ShoppingBag },
     { id: 'produtos', label: 'Produtos', icon: Package },
     { id: 'categorias', label: 'Categorias', icon: List },
     { id: 'cupons', label: 'Cupons', icon: Ticket },
@@ -103,7 +105,7 @@ export default function AdminDashboard() {
         </div>
         <div className="p-4 border-t border-premium-800 shrink-0">
           <button 
-            onClick={() => navigate('/admin')} 
+            onClick={() => navigate('/')} 
             className="w-full flex items-center space-x-3 px-4 py-3 text-red-400 hover:text-white hover:bg-red-500/20 transition-all rounded-sm text-sm font-bold uppercase tracking-widest border border-red-500/30"
           >
             <LogOut className="w-5 h-5" />
@@ -120,6 +122,7 @@ export default function AdminDashboard() {
 
         <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col">
           <div className="bg-white rounded-sm shadow-sm border border-premium-100 flex-1 flex flex-col overflow-hidden relative text-premium-900">
+            {activeTab === 'pedidos' && <OrderTab refreshTrigger={refreshTrigger} onShowSuccess={showSuccess} />}
             {activeTab === 'produtos' && <ProductTab categories={categories} refreshTrigger={refreshTrigger} onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} />}
             {activeTab === 'categorias' && <CategoryTab refreshTrigger={refreshTrigger} onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} refreshCategories={loadCategories} />}
             {activeTab === 'cupons' && <CouponTab refreshTrigger={refreshTrigger} onShowSuccess={showSuccess} onDeleteRequest={handleDeleteRequest} />}
