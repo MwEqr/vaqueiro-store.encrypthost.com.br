@@ -1,8 +1,8 @@
 // C:\Users\henri\Desktop\vaqueiro-store\frontend\src\services\api.ts
 
-// Usamos o caminho completo para o arquivo index.php com um parâmetro de rota.
-// Isso evita problemas de configuração de "Pretty URLs" no Nginx/Apache da VPS.
-const API_URL = '/backend/index.php?route=';
+// Usamos a rota configurada no Nginx. 
+// A "outra IA" configurou /api para apontar para o backend.
+const API_URL = '/api/';
 
 export const fetchProducts = async () => {
   try {
