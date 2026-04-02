@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Ticket, Search, Plus, X, Edit, Trash2, Loader2 } from 'lucide-react';
-import { fetchCoupons } from '../../services/api';
+import { fetchCoupons, saveCoupon } from '../../services/api';
 
 interface Coupon {
   id: number;
@@ -8,6 +8,9 @@ interface Coupon {
   discount: number;
   type: string;
   active: boolean;
+  date_expires: string;
+  minimum_amount: number;
+  usage_limit: number | null;
 }
 
 export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
@@ -15,10 +18,14 @@ export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const [name, setName] = useState('');
   const [discount, setDiscount] = useState('');
-  const [active, setActive] = useState(true);
+  const [type, setType] = useState('percent');
+  const [dateExpires, setDateExpires] = useState('');
+  const [minAmount, setMinAmount] = useState('');
+  const [usageLimit, setUsageLimit] = useState('');
 
   useEffect(() => {
     loadData();
@@ -31,20 +38,45 @@ export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
     setLoading(false);
   };
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    onShowSuccess(editingId ? 'Cupom atualizado no WordPress!' : 'Cupom criado no WordPress!');
-    setShowForm(false);
-    resetForm();
-    loadData();
+    setSaving(true);
+    const payload = {
+      id: editingId,
+      code: name,
+      discount: parseFloat(discount),
+      type: type,
+      date_expires: dateExpires,
+      minimum_amount: parseFloat(minAmount) || 0,
+      usage_limit: parseInt(usageLimit) || null
+    };
+
+    try {
+      await saveCoupon(payload, editingId ? 'PUT' : 'POST');
+      onShowSuccess(editingId ? 'Cupom atualizado no WooCommerce!' : 'Cupom criado no WooCommerce!');
+      setShowForm(false);
+      resetForm();
+      loadData();
+    } catch (err) {
+      alert("Erro ao salvar cupom. Verifique a conexão com o WooCommerce.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   const resetForm = () => {
-    setEditingId(null); setName(''); setDiscount(''); setActive(true);
+    setEditingId(null); setName(''); setDiscount(''); setType('percent');
+    setDateExpires(''); setMinAmount(''); setUsageLimit('');
   };
 
   const openEdit = (c: Coupon) => {
-    setEditingId(c.id); setName(c.code); setDiscount(c.discount.toString()); setActive(c.active);
+    setEditingId(c.id); 
+    setName(c.code); 
+    setDiscount(c.discount.toString()); 
+    setType(c.type);
+    setDateExpires(c.date_expires ? c.date_expires.substring(0, 10) : '');
+    setMinAmount(c.minimum_amount ? c.minimum_amount.toString() : '');
+    setUsageLimit(c.usage_limit ? c.usage_limit.toString() : '');
     setShowForm(true);
   };
 
@@ -55,34 +87,55 @@ export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
   return (
     <div className="flex flex-col h-full text-premium-900">
       {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
           <div className="absolute inset-0 bg-premium-900/60 backdrop-blur-sm" onClick={() => setShowForm(false)} />
-          <div className="relative bg-white w-full max-w-2xl p-8 rounded-sm shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-premium-900">
+          <div className="relative bg-white w-full max-w-3xl my-8 p-8 rounded-sm shadow-2xl animate-in fade-in zoom-in-95 duration-200 text-premium-900">
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-premium-100">
               <h2 className="text-xl font-serif">{editingId ? 'Editar' : 'Novo'} Cupom</h2>
               <button onClick={() => setShowForm(false)} className="text-premium-400 hover:text-premium-900"><X size={24}/></button>
             </div>
-            <form onSubmit={handleSave} className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="col-span-2">
+            <form onSubmit={handleSave} className="space-y-8">
+              
+              <div className="grid grid-cols-2 gap-6 bg-premium-50/50 p-6 border border-premium-100 rounded-sm">
+                <h3 className="col-span-2 text-xs font-bold uppercase tracking-wider text-premium-600 mb-2">Dados Básicos</h3>
+                <div className="col-span-2 md:col-span-1">
                   <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Código do Cupom</label>
-                  <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent uppercase outline-none bg-white" />
+                  <input type="text" value={name} onChange={e => setName(e.target.value)} required className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent uppercase outline-none bg-white" placeholder="EX: NATAL10" />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Tipo de Desconto</label>
+                  <select value={type} onChange={e => setType(e.target.value)} className="w-full border border-premium-200 px-4 py-2.5 text-sm outline-none bg-white">
+                    <option value="percent">Porcentagem (%)</option>
+                    <option value="fixed_cart">Valor Fixo (R$)</option>
+                  </select>
                 </div>
                 <div className="col-span-2 md:col-span-1">
                   <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Valor do Desconto</label>
-                  <input type="number" value={discount} onChange={e => setDiscount(e.target.value)} required className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent outline-none bg-white" />
-                </div>
-                <div className="col-span-2 flex items-center mt-2">
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" checked={active} onChange={e => setActive(e.target.checked)} className="sr-only peer" />
-                    <div className="w-11 h-6 bg-premium-200 rounded-full peer peer-checked:bg-accent after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
-                    <span className="ml-3 text-xs font-bold text-premium-700 uppercase tracking-widest">Cupom Ativo</span>
-                  </label>
+                  <input type="number" step="0.01" value={discount} onChange={e => setDiscount(e.target.value)} required className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent outline-none bg-white" placeholder={type === 'percent' ? 'Ex: 10' : 'Ex: 50.00'} />
                 </div>
               </div>
+
+              <div className="grid grid-cols-2 gap-6 bg-premium-50/50 p-6 border border-premium-100 rounded-sm">
+                <h3 className="col-span-2 text-xs font-bold uppercase tracking-wider text-premium-600 mb-2">Regras de Uso</h3>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Data de Vencimento</label>
+                  <input type="date" value={dateExpires} onChange={e => setDateExpires(e.target.value)} className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent outline-none bg-white" />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Gasto Mínimo (R$)</label>
+                  <input type="number" step="0.01" value={minAmount} onChange={e => setMinAmount(e.target.value)} className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent outline-none bg-white" placeholder="Ex: 100.00" />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Máximo de Usos</label>
+                  <input type="number" value={usageLimit} onChange={e => setUsageLimit(e.target.value)} className="w-full border border-premium-200 px-4 py-2.5 text-sm focus:border-accent outline-none bg-white" placeholder="Deixe em branco para ilimitado" />
+                </div>
+              </div>
+
               <div className="pt-6 border-t border-premium-100 flex gap-4 justify-end">
                 <button type="button" onClick={() => setShowForm(false)} className="bg-white border border-premium-200 text-premium-700 px-8 py-2 text-xs font-bold uppercase rounded-sm">Cancelar</button>
-                <button type="submit" className="bg-premium-900 text-white px-8 py-2 text-xs font-bold uppercase rounded-sm shadow-md">Salvar no WordPress</button>
+                <button type="submit" disabled={saving} className="bg-premium-900 text-white px-8 py-2 text-xs font-bold uppercase rounded-sm shadow-md flex items-center gap-2">
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : null} Salvar no WordPress
+                </button>
               </div>
             </form>
           </div>
@@ -100,13 +153,14 @@ export default function CouponTab({ onShowSuccess, onDeleteRequest }: any) {
       <div className="flex-1 overflow-auto">
         {coupons.length === 0 ? (<div className="h-full flex flex-col items-center justify-center p-12 text-center text-premium-900"><Ticket size={40} className="text-premium-200"/><h3 className="mt-4 font-serif text-lg">Sem cupons no WooCommerce</h3></div>) : (
           <table className="w-full text-left text-sm text-premium-900">
-            <thead className="text-[10px] text-premium-500 uppercase bg-premium-50 border-b border-premium-100 sticky top-0 z-10 font-bold tracking-widest uppercase"><tr><th className="px-6 py-4">Código</th><th className="px-6 py-4">Desconto</th><th className="px-6 py-4">Tipo</th><th className="px-6 py-4 text-right">Ações</th></tr></thead>
+            <thead className="text-[10px] text-premium-500 uppercase bg-premium-50 border-b border-premium-100 sticky top-0 z-10 font-bold tracking-widest uppercase"><tr><th className="px-6 py-4">Código</th><th className="px-6 py-4">Desconto</th><th className="px-6 py-4">Tipo</th><th className="px-6 py-4">Vencimento</th><th className="px-6 py-4 text-right">Ações</th></tr></thead>
             <tbody>
               {coupons.map(c => (
                 <tr key={c.id} className="border-b border-premium-50 hover:bg-premium-50/50 group transition-colors">
                   <td className="px-6 py-4 font-bold tracking-widest uppercase">{c.code}</td>
                   <td className="px-6 py-4 text-accent font-bold">{c.discount}{c.type === 'percent' ? '%' : ' FIXO'}</td>
                   <td className="px-6 py-4 text-premium-500 uppercase text-[10px]">{c.type === 'percent' ? 'Percentual' : 'Valor Fixo'}</td>
+                  <td className="px-6 py-4 text-premium-500 text-[10px]">{c.date_expires ? new Date(c.date_expires).toLocaleDateString('pt-BR') : 'Sem validade'}</td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end gap-2">
                       <button onClick={() => openEdit(c)} className="p-2 bg-premium-50 text-premium-600 hover:bg-premium-900 hover:text-white transition-all rounded-sm border border-premium-100" title="Editar">

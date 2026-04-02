@@ -37,6 +37,30 @@ export const fetchCoupons = async () => {
   }
 };
 
+export const saveProduct = async (product: any, method: 'POST' | 'PUT') => {
+  const res = await fetch(`${API_URL}products`, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(product) });
+  if (!res.ok) throw new Error('Failed to save product');
+  return res.json();
+};
+
+export const deleteProduct = async (id: number) => {
+  const res = await fetch(`${API_URL}products?id=${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete product');
+  return res.json();
+};
+
+export const saveCoupon = async (coupon: any, method: 'POST' | 'PUT') => {
+  const res = await fetch(`${API_URL}coupons`, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(coupon) });
+  if (!res.ok) throw new Error('Failed to save coupon');
+  return res.json();
+};
+
+export const deleteCoupon = async (id: number) => {
+  const res = await fetch(`${API_URL}coupons?id=${id}`, { method: 'DELETE' });
+  if (!res.ok) throw new Error('Failed to delete coupon');
+  return res.json();
+};
+
 export const login = async (email: string, password: string) => {
   try {
     const response = await fetch(`${API_URL}auth`, {

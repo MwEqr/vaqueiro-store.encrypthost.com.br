@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Star, Shield, Package, RotateCcw, ShoppingBag, Info, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
-import { PRODUCTS as MOCK_PRODUCTS } from '../data/mockProducts';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
 import { fetchProducts } from '../services/api';
@@ -11,7 +10,7 @@ export default function ProductPage() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   
-  const [product, setProduct] = useState<any>(MOCK_PRODUCTS.find(p => p.id === Number(id)) || MOCK_PRODUCTS[0]);
+  const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
   const [selectedSize, setSelectedSize] = useState('');
@@ -35,15 +34,10 @@ export default function ProductPage() {
         const found = data.find((p: any) => p.id === Number(id));
         if (found) {
           setProduct(found);
-          setSelectedSize(found.sizes[0]);
-          setSelectedColor(found.colors[0]);
+          setSelectedSize(found.sizes?.[0] || '');
+          setSelectedColor(found.colors?.[0] || '');
           setMainImage(found.image);
         }
-      } else {
-        // Fallback already set in useState
-        setSelectedSize(product.sizes[0]);
-        setSelectedColor(product.colors[0]);
-        setMainImage(product.image);
       }
       setLoading(false);
     };
@@ -51,11 +45,15 @@ export default function ProductPage() {
   }, [id]);
 
   const handleAddToCart = () => {
-    addToCart(product, selectedSize, selectedColor, quantity);
+    if(product) addToCart(product, selectedSize, selectedColor, quantity);
   };
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center bg-premium-50">Carregando...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-premium-50">Carregando detalhes do produto...</div>;
+  }
+
+  if (!product) {
+    return <div className="min-h-screen flex flex-col items-center justify-center bg-premium-50"><p className="font-serif text-xl text-premium-900 mb-4">Produto não encontrado.</p><Link to="/" className="text-accent underline">Voltar para a Home</Link></div>;
   }
 
   return (

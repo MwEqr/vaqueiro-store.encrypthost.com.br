@@ -1,40 +1,76 @@
 <?php
 // C:\Users\henri\Desktop\vaqueiro-store\backend\api\coupons.php
-
 require_once __DIR__ . '/../config/db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $url = WC_STORE_URL . '/wp-json/wc/v3/coupons';
-    $auth = base64_encode(WC_CONSUMER_KEY . ':' . WC_CONSUMER_SECRET);
+$method = $_SERVER['REQUEST_METHOD'];
+$url = WC_STORE_URL . '/wp-json/wc/v3/coupons';
+$auth = base64_encode(WC_CONSUMER_KEY . ':' . WC_CONSUMER_SECRET);
 
+function wc_curl($url, $method, $data = null) {
+    global $auth;
     $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url . '?per_page=100');
+    curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Authorization: Basic ' . $auth,
-        'Content-Type: application/json'
-    ]);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+    $headers = ['Authorization: Basic ' . $auth, 'Content-Type: application/json'];
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-    $response = curl_exec($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($data) curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    $res = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
+    return ['code' => $code, 'body' => $res];
+}
 
-    if ($http_code === 200) {
-        $wc_coupons = json_decode($response);
+if ($method === 'GET') {
+    $res = wc_curl($url . '?per_page=100', 'GET');
+    if ($res['code'] === 200) {
+        $wc_coupons = json_decode($res['body']);
         $formatted = [];
         foreach ($wc_coupons as $c) {
             $formatted[] = [
                 'id' => $c->id,
                 'code' => strtoupper($c->code),
                 'discount' => (float)$c->amount,
-                'type' => $c->discount_type === 'percent' ? 'percent' : 'fixed',
-                'active' => true
+                'type' => $c->discount_type === 'percent' ? 'percent' : 'fixed_cart',
+                'active' => true,
+                'date_expires' => $c->date_expires ? substr($c->date_expires, 0, 10) : '',
+                'minimum_amount' => (float)$c->minimum_amount,
+                'usage_limit' => $c->usage_limit
             ];
         }
         echo json_encode($formatted);
     } else {
-        http_response_code($http_code);
+        http_response_code($res['code'] ?: 500);
         echo json_encode(["error" => "Falha ao buscar cupons"]);
+    }
+} elseif ($method === 'POST' || $method === 'PUT') {
+    $data = json_decode(file_get_contents('php://input'), true);
+    $payload = [
+        'code' => strtolower($data['code']),
+        'amount' => (string)$data['discount'],
+        'discount_type' => $data['type'] === 'percent' ? 'percent' : 'fixed_cart',
+        'minimum_amount' => (string)$data['minimum_amount'],
+        'usage_limit' => !empty($data['usage_limit']) ? (int)$data['usage_limit'] : null,
+    ];
+    if (!empty($data['date_expires'])) {
+        $payload['date_expires'] = $data['date_expires'] . 'T23:59:59';
+    } else {
+        $payload['date_expires'] = null;
+    }
+    
+    $endpoint = $method === 'PUT' ? $url . '/' . $data['id'] : $url;
+    $res = wc_curl($endpoint, $method, $payload);
+    http_response_code($res['code']);
+    echo $res['body'];
+} elseif ($method === 'DELETE') {
+    $id = $_GET['id'] ?? '';
+    if ($id) {
+        $res = wc_curl($url . '/' . $id . '?force=true', 'DELETE');
+        http_response_code($res['code']);
+        echo $res['body'];
+    } else {
+        http_response_code(400);
+        echo json_encode(["error" => "ID missing"]);
     }
 }

@@ -1,18 +1,44 @@
-import { Clock } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Clock, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { PRODUCTS } from '../data/mockProducts';
+import { fetchProducts } from '../services/api';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, FreeMode } from 'swiper/modules';
 // @ts-ignore
 import 'swiper/css';
 
-// Reusing mock products that have promotions
-const PROMO_PRODUCTS = PRODUCTS.filter(p => p.oldPrice).map(p => ({
-  ...p,
-  tag: `-${Math.round((1 - p.price / p.oldPrice!) * 100)}%`
-}));
-
 export default function PromoCarousel() {
+  const [promoProducts, setPromoProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPromos = async () => {
+      setLoading(true);
+      const data = await fetchProducts();
+      if (data && data.length > 0) {
+        // Filtra apenas produtos que têm preço antigo (promoção)
+        const filtered = data.filter((p: any) => p.oldPrice).map((p: any) => ({
+          ...p,
+          tag: `-${Math.round((1 - p.price / p.oldPrice!) * 100)}%`
+        }));
+        setPromoProducts(filtered);
+      }
+      setLoading(false);
+    };
+    loadPromos();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 w-full">
+        <Loader2 className="w-8 h-8 text-accent animate-spin mb-4" />
+        <p className="text-premium-500 font-serif">Buscando ofertas...</p>
+      </div>
+    );
+  }
+
+  if (promoProducts.length === 0) return null;
+
   return (
     <section id="ofertas" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 overflow-hidden">
       <div className="flex items-center justify-between mb-10 border-b border-premium-200 pb-4">
@@ -43,7 +69,7 @@ export default function PromoCarousel() {
           }}
           className="pb-8 promo-swiper"
         >
-          {PROMO_PRODUCTS.map((product) => (
+          {promoProducts.map((product) => (
             <SwiperSlide key={product.id} className="!w-[260px] md:!w-[280px]">
               <Link 
                 to={`/product/${product.id}`} 
