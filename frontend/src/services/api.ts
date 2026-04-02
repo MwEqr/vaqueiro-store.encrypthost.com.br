@@ -1,6 +1,6 @@
 // C:\Users\henri\Desktop\vaqueiro-store\frontend\src\services\api.ts
 
-const API_URL = 'http://localhost:8000/backend/index.php';
+const API_URL = '/backend/index.php';
 
 export const fetchProducts = async () => {
   try {
