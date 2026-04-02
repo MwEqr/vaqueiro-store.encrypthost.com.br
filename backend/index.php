@@ -6,7 +6,6 @@ header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
 
-// Handle OPTIONS requests (CORS preflight)
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -14,12 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 require_once 'config/db.php';
 
+// Pega apenas a parte final da URL (ex: /products)
 $request_uri = $_SERVER['REQUEST_URI'];
-$base_path = '/backend/index.php'; // Adjust this according to your server configuration
+$script_name = $_SERVER['SCRIPT_NAME'];
+$base_path = str_replace('index.php', '', $script_name);
 $endpoint = str_replace($base_path, '', $request_uri);
-$endpoint = explode('?', $endpoint)[0]; // Remove query string
+$endpoint = '/' . ltrim(explode('?', $endpoint)[0], '/');
+$endpoint = str_replace('index.php/', '', $endpoint);
+$endpoint = '/' . ltrim($endpoint, '/');
 
-// Simple router
+// Roteador
 switch ($endpoint) {
     case '/products':
         require 'api/products.php';
@@ -28,13 +31,12 @@ switch ($endpoint) {
         require 'api/categories.php';
         break;
     case '/coupons':
-        require 'api/coupons.php'; // Vou criar em seguida
-        break;
+        require 'api/coupons.php';
     case '/auth':
         require 'api/auth.php';
         break;
     default:
         http_response_code(404);
-        echo json_encode(["message" => "Endpoint not found", "endpoint" => $endpoint]);
+        echo json_encode(["message" => "Endpoint nao encontrado", "path" => $endpoint]);
         break;
 }
