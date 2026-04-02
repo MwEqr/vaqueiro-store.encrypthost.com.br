@@ -44,6 +44,9 @@ try {
         case '/upload':
             require 'api/upload.php';
             break;
+        case '/checkout':
+            require 'api/checkout.php';
+            break;
         default:
             http_response_code(404);
             echo json_encode(["error" => "Rota nao encontrada", "endpoint" => $endpoint]);

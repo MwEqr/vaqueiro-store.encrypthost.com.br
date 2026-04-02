@@ -108,3 +108,13 @@ export const register = async (name: string, email: string, password: string) =>
     return { status: 'error', message: 'Connection error' };
   }
 };
+
+export const createOrder = async (payload: any) => {
+  const res = await fetch(`${API_URL}checkout`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Falha ao criar o pedido');
+  return res.json();
+};

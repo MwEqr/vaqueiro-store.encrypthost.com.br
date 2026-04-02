@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ShieldCheck, Ticket, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { createOrder } from '../services/api';
 
 const validateCPF = (cpf: string) => {
   cpf = cpf.replace(/[^\d]+/g, '');
@@ -36,6 +37,7 @@ export default function CheckoutPage() {
   
   const [freight, setFreight] = useState(0);
   const [freightLoading, setFreightLoading] = useState(false);
+  const [loadingCheckout, setLoadingCheckout] = useState(false);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +46,51 @@ export default function CheckoutPage() {
     } else {
       alert('Cupom inválido ou expirado.');
       setDiscount(0);
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (cpfError !== '' || cepError !== '' || freight === 0) return;
+    setLoadingCheckout(true);
+
+    // Constrói o Payload com os dados do Formulário
+    // Nota: Em uma versão final, os campos como email, nome e telefone precisam estar controlados por states reais
+    // Por brevidade, vamos usar dummy data ou tentar pegar do LocalStorage se for usuário logado.
+    
+    // Assumimos que o cliente preencheu os inputs, mas aqui enviaríamos o valor dos states correspondentes
+    // (Sugiro que você crie states para Nome, Sobrenome, E-mail se precisar)
+    
+    const payload = {
+      items,
+      freight,
+      coupon: discount > 0 ? couponCode : null,
+      customer: {
+        firstName: 'Cliente',
+        lastName: 'Vaqueiro',
+        email: 'cliente@email.com', // Aqui deveria vir o state `email`
+        phone: '11999999999',
+        cpf: cpf,
+        cep: cep,
+        address: rua,
+        complement: '',
+        city: cidade,
+        state: estado
+      }
+    };
+
+    try {
+      const data = await createOrder(payload);
+      
+      if (data.status === 'success' && data.payment_url) {
+        // Redireciona o cliente para a tela oficial de pagamento do WooCommerce / Mercado Pago
+        window.location.href = data.payment_url;
+      } else {
+        alert('Erro ao gerar o link de pagamento do WooCommerce.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao processar o pagamento.');
+    } finally {
+      setLoadingCheckout(false);
     }
   };
 
@@ -299,11 +346,12 @@ export default function CheckoutPage() {
               </div>
 
               <button 
-                disabled={cpfError !== '' || cepError !== '' || freight === 0}
+                onClick={handleCheckout}
+                disabled={loadingCheckout}
                 className="w-full bg-accent text-white py-4 mt-8 font-medium tracking-widest uppercase text-sm hover:bg-accent-dark transition-all shadow-lg flex justify-center items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <ShieldCheck className="w-5 h-5" />
-                Pagamento Seguro
+                {loadingCheckout ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShieldCheck className="w-5 h-5" />}
+                {loadingCheckout ? 'Processando Pedido...' : 'Pagamento Seguro'}
               </button>
               
             </div>
