@@ -20,7 +20,7 @@ foreach ($data['items'] as $item) {
     $line_items[] = [
         'product_id' => $item['id'],
         'quantity' => $item['quantity'],
-        // 'total' => (string)($item['price'] * $item['quantity'])
+        'total' => (string)($item['price'] * $item['quantity']) // Força o preço do React para evitar R$ 0.00 no WooCommerce
     ];
 }
 
