@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ShieldCheck, Ticket, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { createOrder } from '../services/api';
+import { createOrder, fetchCoupons } from '../services/api';
 
 const validateCPF = (cpf: string) => {
   cpf = cpf.replace(/[^\d]+/g, '');
@@ -24,6 +24,7 @@ export default function CheckoutPage() {
   const { items, cartTotal } = useCart();
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
+  const [validatingCoupon, setValidatingCoupon] = useState(false);
 
   // Form states
   const [cpf, setCpf] = useState('');
@@ -39,13 +40,54 @@ export default function CheckoutPage() {
   const [freightLoading, setFreightLoading] = useState(false);
   const [loadingCheckout, setLoadingCheckout] = useState(false);
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
+  const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (couponCode.toUpperCase() === 'VAQUEIRO10') {
-      setDiscount(cartTotal * 0.1);
-    } else {
-      alert('Cupom inválido ou expirado.');
+    if (!couponCode.trim()) return;
+    
+    setValidatingCoupon(true);
+    try {
+      const coupons = await fetchCoupons();
+      const codeToApply = couponCode.trim().toUpperCase();
+      const foundCoupon = coupons.find((c: any) => c.code.toUpperCase() === codeToApply);
+
+      if (!foundCoupon) {
+        alert('Cupom inválido ou não encontrado.');
+        setDiscount(0);
+        return;
+      }
+
+      // Validação de Validade
+      if (foundCoupon.date_expires) {
+        const today = new Date();
+        const expirationDate = new Date(foundCoupon.date_expires);
+        if (today > expirationDate) {
+          alert('Este cupom já expirou.');
+          setDiscount(0);
+          return;
+        }
+      }
+
+      // Validação de Gasto Mínimo
+      if (foundCoupon.minimum_amount > 0 && cartTotal < foundCoupon.minimum_amount) {
+        alert(`Este cupom exige um gasto mínimo de R$ ${foundCoupon.minimum_amount.toFixed(2).replace('.', ',')}.`);
+        setDiscount(0);
+        return;
+      }
+
+      // Aplica o Desconto Real
+      if (foundCoupon.type === 'percent') {
+        setDiscount(cartTotal * (foundCoupon.discount / 100));
+      } else {
+        // fixed_cart
+        setDiscount(Math.min(cartTotal, foundCoupon.discount)); // Impede desconto maior que a compra
+      }
+      
+      alert('Cupom aplicado com sucesso!');
+    } catch (err) {
+      alert('Erro ao validar cupom. Tente novamente.');
       setDiscount(0);
+    } finally {
+      setValidatingCoupon(false);
     }
   };
 
@@ -311,7 +353,8 @@ export default function CheckoutPage() {
                       className="w-full border border-premium-200 pl-9 pr-4 py-2.5 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm uppercase transition-all"
                     />
                   </div>
-                  <button type="submit" className="bg-premium-900 text-white px-4 py-2.5 text-sm font-medium hover:bg-premium-800 transition-colors">
+                  <button type="submit" disabled={validatingCoupon} className="bg-premium-900 text-white px-4 py-2.5 text-sm font-medium hover:bg-premium-800 transition-colors flex items-center gap-2">
+                    {validatingCoupon ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
                     Aplicar
                   </button>
                 </form>
