@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ShoppingBag, Loader2 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { motion } from 'framer-motion';
@@ -20,6 +20,9 @@ const itemVariants = {
 
 export default function CollectionPage() {
   const { addToCart } = useCart();
+  const [searchParams] = useSearchParams();
+  const categoryFilter = searchParams.get('categoria');
+
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,11 +30,18 @@ export default function CollectionPage() {
     const getProducts = async () => {
       setLoading(true);
       const data = await fetchProducts();
-      setProducts(data || []);
+      let filtered = data || [];
+      
+      // Aplica o filtro caso exista a categoria na URL (ex: ?categoria=Botas)
+      if (categoryFilter) {
+        filtered = filtered.filter((p: any) => p.category.toLowerCase() === categoryFilter.toLowerCase());
+      }
+      
+      setProducts(filtered);
       setLoading(false);
     };
     getProducts();
-  }, []);
+  }, [categoryFilter]);
 
   return (
     <div className="bg-premium-50 min-h-screen pt-10 pb-20">
@@ -44,10 +54,15 @@ export default function CollectionPage() {
           transition={{ duration: 0.7, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <h1 className="text-3xl md:text-5xl font-serif text-premium-900 mb-4">Coleção Completa</h1>
+          <h1 className="text-3xl md:text-5xl font-serif text-premium-900 mb-4 text-accent-dark capitalize">
+            {categoryFilter ? `Coleção: ${categoryFilter}` : 'Coleção Completa'}
+          </h1>
           <div className="h-0.5 w-12 bg-accent mx-auto mb-6"></div>
           <p className="text-premium-600 max-w-2xl mx-auto">
-            Explore nossa seleção exclusiva de artigos para o verdadeiro vaqueiro. Tradição e resistência em cada detalhe.
+            {categoryFilter 
+              ? `Explorando nossa seleção especial de ${categoryFilter.toLowerCase()}.` 
+              : 'Explore nossa seleção exclusiva de artigos para o verdadeiro vaqueiro. Tradição e resistência em cada detalhe.'
+            }
           </p>
         </motion.div>
 

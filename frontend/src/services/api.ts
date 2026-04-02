@@ -15,6 +15,14 @@ export const fetchProducts = async () => {
   }
 };
 
+export const uploadImage = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const res = await fetch(`${API_URL}upload.php`, { method: 'POST', body: formData });
+  if (!res.ok) throw new Error('Falha no upload da imagem');
+  return res.json();
+};
+
 export const fetchCategories = async () => {
   try {
     const response = await fetch(`${API_URL}categories`);

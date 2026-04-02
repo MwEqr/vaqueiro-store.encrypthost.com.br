@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Package, Search, Plus, X, Edit, Trash2, Image as ImageIcon, Loader2 } from 'lucide-react';
-import { fetchProducts, saveProduct } from '../../services/api';
+import { Package, Search, Plus, X, Edit, Trash2, Image as ImageIcon, Loader2, Upload } from 'lucide-react';
+import { fetchProducts, saveProduct, uploadImage } from '../../services/api';
 
 interface Product {
   id: number;
@@ -22,6 +22,7 @@ export default function ProductTab({ categories, onShowSuccess, onDeleteRequest,
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -68,6 +69,24 @@ export default function ProductTab({ categories, onShowSuccess, onDeleteRequest,
     if (newImageUrl.trim() !== '') {
       setImagesList([...imagesList, newImageUrl.trim()]);
       setNewImageUrl('');
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setUploading(true);
+      try {
+        const res = await uploadImage(e.target.files[0]);
+        if (res.url) {
+          setImagesList([...imagesList, res.url]);
+        } else {
+          alert('Falha ao processar URL da imagem');
+        }
+      } catch (err) {
+        alert('Erro ao fazer upload da imagem. Verifique se o arquivo tem permissões corretas no servidor.');
+      } finally {
+        setUploading(false);
+      }
     }
   };
 
@@ -208,10 +227,20 @@ export default function ProductTab({ categories, onShowSuccess, onDeleteRequest,
                   <h3 className="text-sm font-medium mb-6 uppercase tracking-wider">3. Gerenciador de Imagens (Galeria)</h3>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Adicionar Nova Imagem (URL)</label>
-                      <div className="flex gap-2">
-                        <input type="text" value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)} className="flex-1 border border-premium-200 px-4 py-2 text-sm focus:border-accent bg-white outline-none" placeholder="https://unsplash.com/..." />
-                        <button type="button" onClick={handleAddImage} className="bg-premium-900 text-white px-4 py-2 rounded-sm text-xs font-bold uppercase hover:bg-premium-800">Adicionar</button>
+                      <label className="block text-[10px] font-bold text-premium-500 mb-1 uppercase">Adicionar Nova Imagem</label>
+                      <div className="flex flex-col md:flex-row gap-4">
+                        <div className="flex-1 flex gap-2">
+                          <input type="text" value={newImageUrl} onChange={e => setNewImageUrl(e.target.value)} className="flex-1 border border-premium-200 px-4 py-2 text-sm focus:border-accent bg-white outline-none" placeholder="Colar URL da Foto (https://...)" />
+                          <button type="button" onClick={handleAddImage} className="bg-premium-900 text-white px-4 py-2 rounded-sm text-xs font-bold uppercase hover:bg-premium-800">Add Link</button>
+                        </div>
+                        <div className="flex items-center justify-center text-[10px] font-bold text-premium-400 uppercase tracking-widest hidden md:flex">OU</div>
+                        <div className="flex-1">
+                          <label className="flex items-center justify-center w-full bg-white border border-premium-200 px-4 py-2 text-sm text-premium-600 hover:bg-premium-50 cursor-pointer rounded-sm transition-colors border-dashed">
+                            {uploading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
+                            <span className="font-bold uppercase tracking-wider text-xs">{uploading ? 'Enviando...' : 'Fazer Upload do PC'}</span>
+                            <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+                          </label>
+                        </div>
                       </div>
                     </div>
                     <div className="grid grid-cols-4 sm:grid-cols-6 gap-4 mt-6">
