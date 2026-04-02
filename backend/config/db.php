@@ -3,8 +3,8 @@
 
 $host = '127.0.0.1';
 $dbname = 'vaqueiro_wp_db';
-$username = 'vaqueiro_user';
-$password = 'Vaqueiro@2025!'; 
+$username = 'root';
+$password = '461xIBZazRtM'; 
 
 // WooCommerce API Credentials
 define('WC_CONSUMER_KEY', 'ck_b280eea6517b8e12b0788e66695e32f30221fed1');
