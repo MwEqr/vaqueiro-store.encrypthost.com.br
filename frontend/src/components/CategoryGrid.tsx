@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Footprints, Shirt, Tag, Sparkles, Pocket, ShoppingBag, Link as LinkIcon, Star, Loader2 } from 'lucide-react';
+import { Footprints, Shirt, Tag, Crown, Scissors, ShoppingBag, Link as LinkIcon, Star, Loader2 } from 'lucide-react';
 import { fetchCategories } from '../services/api';
 
 const ICONS: Record<string, any> = {
   'botas': Footprints,
   'bota': Footprints,
-  'chapéus': Sparkles,
-  'chapeus': Sparkles,
-  'chapeu': Sparkles,
+  'chapéus': Crown,
+  'chapeus': Crown,
+  'chapeu': Crown,
+  'boné': Crown,
+  'bonés': Crown,
   'cintos': LinkIcon,
   'cinto': LinkIcon,
-  'calças': Pocket,
-  'calcas': Pocket,
-  'calça': Pocket,
+  'calças': Scissors,
+  'calcas': Scissors,
+  'calça': Scissors,
   'camisas': Shirt,
   'camisa': Shirt,
   'fivelas': Star,
@@ -52,7 +54,7 @@ export default function CategoryGrid() {
       {loading ? (
         <div className="flex justify-center py-8"><Loader2 className="w-8 h-8 animate-spin text-accent" /></div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4 md:gap-6">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6">
           {categories.map((cat, i) => {
             // Tenta achar um ícone pelo nome, se não achar usa a sacola de compras genérica
             const Icon = ICONS[cat.name.toLowerCase()] || ShoppingBag;
@@ -60,7 +62,7 @@ export default function CategoryGrid() {
               <div 
                 key={cat.id || i} 
                 onClick={() => navigate(`/colecao?categoria=${encodeURIComponent(cat.name)}`)}
-                className="bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-premium-100 flex flex-col items-center justify-center hover:shadow-xl hover:border-accent-light transition-all duration-300 cursor-pointer group hover:-translate-y-1.5"
+                className="w-[calc(50%-8px)] sm:w-[calc(25%-12px)] lg:w-[140px] bg-white p-5 md:p-6 rounded-3xl shadow-sm border border-premium-100 flex flex-col items-center justify-center hover:shadow-xl hover:border-accent-light transition-all duration-300 cursor-pointer group hover:-translate-y-1.5"
               >
                 <div className="w-14 h-14 md:w-16 md:h-16 bg-premium-50 rounded-full mb-4 group-hover:bg-accent transition-all duration-500 flex items-center justify-center group-hover:scale-110">
                   <Icon className="text-premium-400 group-hover:text-white transition-colors" strokeWidth={1.5} size={26} />
