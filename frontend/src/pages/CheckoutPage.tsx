@@ -1,12 +1,41 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { ShieldCheck, Ticket } from 'lucide-react';
+import { ShieldCheck, Ticket, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const validateCPF = (cpf: string) => {
+  cpf = cpf.replace(/[^\d]+/g, '');
+  if (cpf.length !== 11 || !!cpf.match(/(\d)\1{10}/)) return false;
+  let sum = 0, rest;
+  for (let i = 1; i <= 9; i++) sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+  rest = (sum * 10) % 11;
+  if (rest === 10 || rest === 11) rest = 0;
+  if (rest !== parseInt(cpf.substring(9, 10))) return false;
+  sum = 0;
+  for (let i = 1; i <= 10; i++) sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+  rest = (sum * 10) % 11;
+  if (rest === 10 || rest === 11) rest = 0;
+  if (rest !== parseInt(cpf.substring(10, 11))) return false;
+  return true;
+};
 
 export default function CheckoutPage() {
   const { items, cartTotal } = useCart();
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
+
+  // Form states
+  const [cpf, setCpf] = useState('');
+  const [cpfError, setCpfError] = useState('');
+  
+  const [cep, setCep] = useState('');
+  const [rua, setRua] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [estado, setEstado] = useState('');
+  const [cepError, setCepError] = useState('');
+  
+  const [freight, setFreight] = useState(0);
+  const [freightLoading, setFreightLoading] = useState(false);
 
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +47,65 @@ export default function CheckoutPage() {
     }
   };
 
-  const finalTotal = cartTotal - discount;
+  const handleCpfBlur = () => {
+    if (cpf && !validateCPF(cpf)) {
+      setCpfError('CPF inválido');
+    } else {
+      setCpfError('');
+    }
+  };
+
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Basic mask
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 11) value = value.slice(0, 11);
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d)/, '$1.$2');
+    value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    setCpf(value);
+    if (cpfError) setCpfError('');
+  };
+
+  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 8) value = value.slice(0, 8);
+    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    setCep(value);
+    if (cepError) setCepError('');
+  };
+
+  const handleCepBlur = async () => {
+    const cleanCEP = cep.replace(/\D/g, '');
+    if (cleanCEP.length !== 8) return;
+    
+    setFreightLoading(true);
+    try {
+      const res = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
+      const data = await res.json();
+      if (!data.erro) {
+        setRua(data.logradouro);
+        setCidade(data.localidade);
+        setEstado(data.uf);
+        
+        // Cálculo de Frete simulado partindo de Franca-SP
+        let freightValue = 45.90; // Norte/Nordeste/Resto BR
+        if (data.uf === 'SP') freightValue = 18.90; // Mesmo Estado
+        else if (['MG', 'RJ', 'ES', 'PR', 'SC', 'RS', 'GO', 'DF', 'MS'].includes(data.uf)) freightValue = 28.90; // Sul/Sudeste/Centro-Oeste próximos
+        
+        setFreight(freightValue);
+        setCepError('');
+      } else {
+        setCepError('CEP não encontrado');
+        setFreight(0);
+      }
+    } catch (err) {
+      setCepError('Erro ao buscar CEP');
+    } finally {
+      setFreightLoading(false);
+    }
+  };
+
+  const finalTotal = cartTotal - discount + freight;
 
   return (
     <div className="bg-premium-50 min-h-screen py-12 overflow-hidden">
@@ -65,8 +152,16 @@ export default function CheckoutPage() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-premium-700 mb-1">CPF</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="000.000.000-00" />
+                    <label className="block text-xs font-medium text-premium-700 mb-1">CPF <span className="text-red-500">*</span></label>
+                    <input 
+                      type="text" 
+                      value={cpf}
+                      onChange={handleCpfChange}
+                      onBlur={handleCpfBlur}
+                      className={`w-full border px-4 py-3 focus:outline-none focus:ring-1 text-sm transition-all ${cpfError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-premium-200 focus:border-accent-dark focus:ring-accent-dark'}`} 
+                      placeholder="000.000.000-00" 
+                    />
+                    {cpfError && <span className="text-xs text-red-500 mt-1 block">{cpfError}</span>}
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-premium-700 mb-1">Telefone / WhatsApp</label>
@@ -79,17 +174,26 @@ export default function CheckoutPage() {
             {/* Entrega */}
             <div className="bg-white p-6 md:p-8 rounded-sm shadow-sm border border-premium-100">
               <h2 className="text-lg font-medium text-premium-900 mb-6 uppercase tracking-wider text-sm border-b border-premium-100 pb-4">
-                2. Entrega (Embalagem Segura)
+                2. Entrega (Enviado de Franca-SP)
               </h2>
               <div className="space-y-4">
-                <div>
+                <div className="relative">
                   <label className="block text-xs font-medium text-premium-700 mb-1">CEP</label>
-                  <input type="text" className="w-full sm:w-1/3 border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="00000-000" />
+                  <input 
+                    type="text" 
+                    value={cep}
+                    onChange={handleCepChange}
+                    onBlur={handleCepBlur}
+                    className={`w-full sm:w-1/3 border px-4 py-3 focus:outline-none focus:ring-1 text-sm transition-all ${cepError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-premium-200 focus:border-accent-dark focus:ring-accent-dark'}`} 
+                    placeholder="00000-000" 
+                  />
+                  {freightLoading && <Loader2 className="absolute right-auto left-32 top-[34px] sm:left-40 w-4 h-4 animate-spin text-premium-400" />}
+                  {cepError && <span className="text-xs text-red-500 mt-1 block">{cepError}</span>}
                 </div>
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-4">
                   <div className="col-span-2 sm:col-span-3">
                     <label className="block text-xs font-medium text-premium-700 mb-1">Rua / Avenida</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
+                    <input type="text" value={rua} onChange={e => setRua(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all bg-premium-50" readOnly={rua !== ''} />
                   </div>
                   <div className="col-span-1">
                     <label className="block text-xs font-medium text-premium-700 mb-1">Número</label>
@@ -103,11 +207,11 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-medium text-premium-700 mb-1">Cidade</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
+                    <input type="text" value={cidade} onChange={e => setCidade(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all bg-premium-50" readOnly={cidade !== ''} />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-premium-700 mb-1">Estado</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="Ex: SP" />
+                    <input type="text" value={estado} onChange={e => setEstado(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all bg-premium-50" placeholder="Ex: SP" readOnly={estado !== ''} />
                   </div>
                 </div>
               </div>
@@ -178,9 +282,15 @@ export default function CheckoutPage() {
                     <span>- R$ {discount.toFixed(2).replace('.', ',')}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-premium-600">
+                <div className="flex justify-between text-premium-600 items-center">
                   <span>Frete</span>
-                  <span className="text-accent font-medium">Grátis</span>
+                  {freightLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-premium-400" />
+                  ) : (
+                    <span className={freight === 0 ? "text-premium-400 text-xs italic" : "text-premium-900 font-medium"}>
+                      {freight > 0 ? `R$ ${freight.toFixed(2).replace('.', ',')}` : 'A calcular'}
+                    </span>
+                  )}
                 </div>
                 <div className="flex justify-between font-serif font-semibold text-lg text-premium-900 pt-4 border-t border-premium-100 mt-2">
                   <span>Total</span>
@@ -188,7 +298,10 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <button className="w-full bg-accent text-white py-4 mt-8 font-medium tracking-widest uppercase text-sm hover:bg-accent-dark transition-all shadow-lg flex justify-center items-center gap-2 active:scale-[0.98]">
+              <button 
+                disabled={cpfError !== '' || cepError !== '' || freight === 0}
+                className="w-full bg-accent text-white py-4 mt-8 font-medium tracking-widest uppercase text-sm hover:bg-accent-dark transition-all shadow-lg flex justify-center items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <ShieldCheck className="w-5 h-5" />
                 Pagamento Seguro
               </button>

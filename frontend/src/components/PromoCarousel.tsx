@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Clock, Loader2 } from 'lucide-react';
+import { Clock, Loader2, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { fetchProducts } from '../services/api';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -37,7 +37,25 @@ export default function PromoCarousel() {
     );
   }
 
-  if (promoProducts.length === 0) return null;
+  if (promoProducts.length === 0) {
+    return (
+      <section id="ofertas" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 overflow-hidden">
+        <div className="flex items-center justify-between mb-10 border-b border-premium-200 pb-4">
+          <div className="flex items-center space-x-3">
+            <Clock className="text-premium-400" size={28} />
+            <h2 className="text-2xl md:text-3xl font-serif font-semibold text-premium-900 uppercase tracking-widest">
+              Ofertas <span className="italic font-light text-premium-400">Especiais</span>
+            </h2>
+          </div>
+        </div>
+        <div className="bg-white border border-premium-100 rounded-sm p-12 text-center shadow-sm">
+          <Tag className="w-12 h-12 text-premium-200 mx-auto mb-4" />
+          <h3 className="text-xl font-serif text-premium-900 mb-2">Nenhuma oferta no momento</h3>
+          <p className="text-premium-500">Fique de olho! Em breve teremos novos produtos com descontos especiais para você.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="ofertas" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 overflow-hidden">
