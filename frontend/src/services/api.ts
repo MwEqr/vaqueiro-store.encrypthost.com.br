@@ -115,7 +115,14 @@ export const createOrder = async (payload: any) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   });
-  if (!res.ok) throw new Error('Falha ao criar o pedido');
+  if (!res.ok) {
+    try {
+      const errorData = await res.json();
+      throw new Error(errorData.message || 'Falha ao criar o pedido (Erro ' + res.status + ')');
+    } catch (e) {
+      throw new Error('Falha ao criar o pedido (Erro ' + res.status + ')');
+    }
+  }
   return res.json();
 };
 
