@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
-import { ShieldCheck, Ticket, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { ShieldCheck, Ticket, Loader2, CheckCircle, AlertCircle, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { createOrder, fetchCoupons } from '../services/api';
 
 const validateCPF = (cpf: string) => {
@@ -25,6 +25,9 @@ export default function CheckoutPage() {
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [validatingCoupon, setValidatingCoupon] = useState(false);
+  
+  // Toast State
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
   // Form states
   const [cpf, setCpf] = useState('');
@@ -40,6 +43,11 @@ export default function CheckoutPage() {
   const [freightLoading, setFreightLoading] = useState(false);
   const [loadingCheckout, setLoadingCheckout] = useState(false);
 
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
+
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!couponCode.trim()) return;
@@ -51,40 +59,36 @@ export default function CheckoutPage() {
       const foundCoupon = coupons.find((c: any) => c.code.toUpperCase() === codeToApply);
 
       if (!foundCoupon) {
-        alert('Cupom inválido ou não encontrado.');
+        showToast('Cupom inválido ou não encontrado.', 'error');
         setDiscount(0);
         return;
       }
 
-      // Validação de Validade
       if (foundCoupon.date_expires) {
         const today = new Date();
         const expirationDate = new Date(foundCoupon.date_expires);
         if (today > expirationDate) {
-          alert('Este cupom já expirou.');
+          showToast('Este cupom já expirou.', 'error');
           setDiscount(0);
           return;
         }
       }
 
-      // Validação de Gasto Mínimo
       if (foundCoupon.minimum_amount > 0 && cartTotal < foundCoupon.minimum_amount) {
-        alert(`Este cupom exige um gasto mínimo de R$ ${foundCoupon.minimum_amount.toFixed(2).replace('.', ',')}.`);
+        showToast(`Este cupom exige um gasto mínimo de R$ ${foundCoupon.minimum_amount.toFixed(2).replace('.', ',')}.`, 'error');
         setDiscount(0);
         return;
       }
 
-      // Aplica o Desconto Real
       if (foundCoupon.type === 'percent') {
         setDiscount(cartTotal * (foundCoupon.discount / 100));
       } else {
-        // fixed_cart
-        setDiscount(Math.min(cartTotal, foundCoupon.discount)); // Impede desconto maior que a compra
+        setDiscount(Math.min(cartTotal, foundCoupon.discount)); 
       }
       
-      alert('Cupom aplicado com sucesso!');
+      showToast('Cupom aplicado com sucesso!', 'success');
     } catch (err) {
-      alert('Erro ao validar cupom. Tente novamente.');
+      showToast('Erro ao validar cupom. Tente novamente.', 'error');
       setDiscount(0);
     } finally {
       setValidatingCoupon(false);
@@ -92,16 +96,21 @@ export default function CheckoutPage() {
   };
 
   const handleCheckout = async () => {
-    if (cpfError !== '' || cepError !== '' || freight === 0) return;
+    if (!cpf || cpfError !== '' || !validateCPF(cpf)) {
+      showToast('Por favor, preencha um CPF válido antes de pagar.', 'error');
+      return;
+    }
+    if (!cep || cepError !== '' || freight === 0) {
+      showToast('Por favor, preencha o CEP para calcularmos o valor do frete.', 'error');
+      return;
+    }
+    if (items.length === 0) {
+      showToast('Sua sacola está vazia.', 'error');
+      return;
+    }
+    
     setLoadingCheckout(true);
 
-    // Constrói o Payload com os dados do Formulário
-    // Nota: Em uma versão final, os campos como email, nome e telefone precisam estar controlados por states reais
-    // Por brevidade, vamos usar dummy data ou tentar pegar do LocalStorage se for usuário logado.
-    
-    // Assumimos que o cliente preencheu os inputs, mas aqui enviaríamos o valor dos states correspondentes
-    // (Sugiro que você crie states para Nome, Sobrenome, E-mail se precisar)
-    
     const payload = {
       items,
       freight,
@@ -109,7 +118,7 @@ export default function CheckoutPage() {
       customer: {
         firstName: 'Cliente',
         lastName: 'Vaqueiro',
-        email: 'cliente@email.com', // Aqui deveria vir o state `email`
+        email: 'cliente@vaqueirostore.com',
         phone: '11999999999',
         cpf: cpf,
         cep: cep,
@@ -124,13 +133,12 @@ export default function CheckoutPage() {
       const data = await createOrder(payload);
       
       if (data.status === 'success' && data.payment_url) {
-        // Redireciona o cliente para a tela oficial de pagamento do WooCommerce / Mercado Pago
         window.location.href = data.payment_url;
       } else {
-        alert('Erro ao gerar o link de pagamento do WooCommerce.');
+        showToast('Erro ao gerar o link de pagamento. Verifique as configurações do Mercado Pago no WordPress.', 'error');
       }
     } catch (err) {
-      alert('Erro de conexão ao processar o pagamento.');
+      showToast('Erro de conexão ao processar o pagamento.', 'error');
     } finally {
       setLoadingCheckout(false);
     }
@@ -145,7 +153,6 @@ export default function CheckoutPage() {
   };
 
   const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Basic mask
     let value = e.target.value.replace(/\D/g, '');
     if (value.length > 11) value = value.slice(0, 11);
     value = value.replace(/(\d{3})(\d)/, '$1.$2');
@@ -155,18 +162,7 @@ export default function CheckoutPage() {
     if (cpfError) setCpfError('');
   };
 
-  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 8) value = value.slice(0, 8);
-    value = value.replace(/(\d{5})(\d)/, '$1-$2');
-    setCep(value);
-    if (cepError) setCepError('');
-  };
-
-  const handleCepBlur = async () => {
-    const cleanCEP = cep.replace(/\D/g, '');
-    if (cleanCEP.length !== 8) return;
-    
+  const fetchAddress = async (cleanCEP: string) => {
     setFreightLoading(true);
     try {
       const res = await fetch(`https://viacep.com.br/ws/${cleanCEP}/json/`);
@@ -176,10 +172,9 @@ export default function CheckoutPage() {
         setCidade(data.localidade);
         setEstado(data.uf);
         
-        // Cálculo de Frete simulado partindo de Franca-SP
-        let freightValue = 45.90; // Norte/Nordeste/Resto BR
-        if (data.uf === 'SP') freightValue = 18.90; // Mesmo Estado
-        else if (['MG', 'RJ', 'ES', 'PR', 'SC', 'RS', 'GO', 'DF', 'MS'].includes(data.uf)) freightValue = 28.90; // Sul/Sudeste/Centro-Oeste próximos
+        let freightValue = 45.90; 
+        if (data.uf === 'SP') freightValue = 18.90; 
+        else if (['MG', 'RJ', 'ES', 'PR', 'SC', 'RS', 'GO', 'DF', 'MS'].includes(data.uf)) freightValue = 28.90; 
         
         setFreight(freightValue);
         setCepError('');
@@ -194,10 +189,48 @@ export default function CheckoutPage() {
     }
   };
 
+  const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 8) value = value.slice(0, 8);
+    value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    setCep(value);
+    if (cepError) setCepError('');
+    
+    const cleanCEP = value.replace(/\D/g, '');
+    if (cleanCEP.length === 8) {
+      fetchAddress(cleanCEP);
+    }
+  };
+
   const finalTotal = cartTotal - discount + freight;
 
   return (
-    <div className="bg-premium-50 min-h-screen py-12 overflow-hidden">
+    <div className="bg-premium-50 min-h-screen py-12 overflow-hidden relative">
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -50, x: '-50%' }}
+            animate={{ opacity: 1, y: 0, x: '-50%' }}
+            exit={{ opacity: 0, y: -50, x: '-50%' }}
+            className={`fixed top-24 left-1/2 z-[100] flex items-center px-6 py-4 rounded-sm shadow-2xl border ${
+              toast.type === 'success' ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'
+            }`}
+          >
+            {toast.type === 'success' ? (
+              <CheckCircle className="w-5 h-5 mr-3 text-green-500 shrink-0" />
+            ) : (
+              <AlertCircle className="w-5 h-5 mr-3 text-red-500 shrink-0" />
+            )}
+            <p className={`text-sm font-medium ${toast.type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
+              {toast.message}
+            </p>
+            <button onClick={() => setToast(null)} className={`ml-6 ${toast.type === 'success' ? 'text-green-600 hover:text-green-800' : 'text-red-600 hover:text-red-800'}`}>
+              <X className="w-4 h-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <motion.h1 
@@ -211,7 +244,6 @@ export default function CheckoutPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
-          {/* Formulário de Dados */}
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -219,7 +251,6 @@ export default function CheckoutPage() {
             className="lg:col-span-7 xl:col-span-8 space-y-8"
           >
             
-            {/* Contato */}
             <div className="bg-white p-6 md:p-8 rounded-sm shadow-sm border border-premium-100">
               <h2 className="text-lg font-medium text-premium-900 mb-6 uppercase tracking-wider text-sm border-b border-premium-100 pb-4">
                 1. Identificação
@@ -260,7 +291,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Entrega */}
             <div className="bg-white p-6 md:p-8 rounded-sm shadow-sm border border-premium-100">
               <h2 className="text-lg font-medium text-premium-900 mb-6 uppercase tracking-wider text-sm border-b border-premium-100 pb-4">
                 2. Entrega (Enviado de Franca-SP)
@@ -272,7 +302,6 @@ export default function CheckoutPage() {
                     type="text" 
                     value={cep}
                     onChange={handleCepChange}
-                    onBlur={handleCepBlur}
                     className={`w-full sm:w-1/3 border px-4 py-3 focus:outline-none focus:ring-1 text-sm transition-all ${cepError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : 'border-premium-200 focus:border-accent-dark focus:ring-accent-dark'}`} 
                     placeholder="00000-000" 
                   />
@@ -308,7 +337,6 @@ export default function CheckoutPage() {
 
           </motion.div>
 
-          {/* Resumo do Pedido */}
           <motion.div 
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -340,7 +368,6 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
-              {/* Seção de Cupom */}
               <div className="mb-6 pt-6 border-t border-premium-100">
                 <form onSubmit={handleApplyCoupon} className="flex gap-2">
                   <div className="relative flex-grow">
@@ -360,7 +387,6 @@ export default function CheckoutPage() {
                 </form>
               </div>
 
-              {/* Totais */}
               <div className="space-y-3 pt-6 border-t border-premium-100 text-sm">
                 <div className="flex justify-between text-premium-600">
                   <span>Subtotal</span>
