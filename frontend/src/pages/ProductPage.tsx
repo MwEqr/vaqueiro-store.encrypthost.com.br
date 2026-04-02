@@ -182,6 +182,7 @@ export default function ProductPage() {
               >
                  
                  {/* Colors */}
+                 {product.colors && product.colors.length > 0 && (
                  <div>
                     <div className="flex justify-between items-center mb-3">
                       <h3 className="text-xs font-medium text-premium-800 uppercase tracking-widest">Cor selecionada</h3>
@@ -203,8 +204,10 @@ export default function ProductPage() {
                        ))}
                     </div>
                  </div>
+                 )}
 
                  {/* Sizes */}
+                 {product.sizes && product.sizes.length > 0 && (
                  <div>
                     <div className="flex justify-between items-center mb-3">
                       <h3 className="text-xs font-medium text-premium-800 uppercase tracking-widest">Tamanho</h3>
@@ -228,6 +231,7 @@ export default function ProductPage() {
                        ))}
                     </div>
                  </div>
+                 )}
 
                  {/* Quantity */}
                  <div>

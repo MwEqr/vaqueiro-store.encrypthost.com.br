@@ -47,8 +47,8 @@ if ($method === 'GET') {
                 'images' => array_map(function($img) { return $img->src; }, $p->images),
                 'rating' => (float)$p->average_rating,
                 'reviews' => $p->review_count,
-                'sizes' => empty($sizes) ? ['P', 'M', 'G'] : $sizes,
-                'colors' => empty($colors) ? ['Natural'] : $colors,
+                'sizes' => empty($sizes) ? [] : $sizes,
+                'colors' => empty($colors) ? [] : $colors,
                 'description' => strip_tags($p->description),
                 'tag' => $p->on_sale ? 'Promoção' : null
             ];
