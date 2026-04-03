@@ -161,3 +161,9 @@ export const updateOrderStatus = async (id: number, status: string) => {
   if (!res.ok) throw new Error('Failed to update order');
   return res.json();
 };
+
+export const getRepayUrl = async (orderId: number) => {
+  const res = await fetch(`${API_URL}repay?id=${orderId}`);
+  if (!res.ok) throw new Error('Falha ao gerar link de pagamento');
+  return res.json();
+};

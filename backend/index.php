@@ -50,6 +50,9 @@ try {
         case '/orders':
             require 'api/orders.php';
             break;
+        case '/repay':
+            require 'api/repay.php';
+            break;
         default:
             http_response_code(404);
             echo json_encode(["error" => "Rota nao encontrada", "endpoint" => $endpoint]);

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { User, ShoppingBag, LogOut, Camera, Loader2, Package, CheckCircle } from 'lucide-react';
-import { fetchOrders, uploadImage, updateProfile } from '../services/api';
+import { User, ShoppingBag, LogOut, Camera, Loader2, Package, CheckCircle, AlertCircle } from 'lucide-react';
+import { fetchOrders, uploadImage, updateProfile, getRepayUrl } from '../services/api';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -13,6 +13,7 @@ export default function ProfilePage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [repayingId, setRepayingId] = useState<number | null>(null);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -85,6 +86,22 @@ export default function ProfilePage() {
     localStorage.removeItem('user');
     navigate('/');
     window.location.reload();
+  };
+
+  const handleRepay = async (orderId: number) => {
+    setRepayingId(orderId);
+    try {
+      const data = await getRepayUrl(orderId);
+      if (data.status === 'success' && data.payment_url) {
+        window.location.href = data.payment_url;
+      } else {
+        alert(data.error || 'Erro ao gerar link de pagamento.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao processar pagamento.');
+    } finally {
+      setRepayingId(null);
+    }
   };
 
   const translateStatus = (status: string) => {
@@ -235,10 +252,12 @@ export default function ProfilePage() {
                                 <strong>Pagamento Pendente:</strong> Finalize sua compra para garantir seus produtos.
                               </div>
                               <button 
-                                onClick={() => window.location.href = order.payment_url}
-                                className="bg-premium-900 text-white px-6 py-2 text-xs font-bold uppercase tracking-widest hover:bg-premium-800 transition-colors shadow-sm"
+                                onClick={() => handleRepay(order.id)}
+                                disabled={repayingId === order.id}
+                                className="bg-premium-900 text-white px-6 py-2 text-xs font-bold uppercase tracking-widest hover:bg-premium-800 transition-colors shadow-sm flex items-center gap-2"
                               >
-                                Pagar Agora
+                                {repayingId === order.id ? <Loader2 className="w-3 h-3 animate-spin" /> : null}
+                                {repayingId === order.id ? 'Gerando link...' : 'Pagar Agora'}
                               </button>
                             </div>
                           )}
