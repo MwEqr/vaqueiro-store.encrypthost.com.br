@@ -18,6 +18,12 @@ export default function ProfilePage() {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
+      // Fallback para nomes antigos
+      if (!parsedUser.firstName && parsedUser.name) {
+        const parts = parsedUser.name.trim().split(' ');
+        parsedUser.firstName = parts[0];
+        parsedUser.lastName = parts.slice(1).join(' ');
+      }
       setUser(parsedUser);
       loadUserOrders(parsedUser.id);
     } else {
@@ -41,15 +47,19 @@ export default function ProfilePage() {
     }
   };
 
+  const handleUpdateUser = (field: string, value: string) => {
+    const updatedUser = { ...user, [field]: value };
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setUploading(true);
       try {
         const res = await uploadImage(e.target.files[0]);
         if (res.url) {
-          const updatedUser = { ...user, avatar: res.url };
-          setUser(updatedUser);
-          localStorage.setItem('user', JSON.stringify(updatedUser));
+          handleUpdateUser('avatar', res.url);
         }
       } catch (err) {
         alert('Erro ao salvar foto de perfil.');
@@ -92,7 +102,7 @@ export default function ProfilePage() {
               <div className="relative mb-4 group cursor-pointer">
                 <div className="w-24 h-24 rounded-full bg-premium-100 border-4 border-white shadow-lg overflow-hidden flex items-center justify-center">
                   {user.avatar ? (
-                    <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                    <img src={user.avatar} alt={user.firstName} className="w-full h-full object-cover" />
                   ) : (
                     <User className="w-10 h-10 text-premium-400" />
                   )}
@@ -103,7 +113,7 @@ export default function ProfilePage() {
                 </label>
               </div>
               
-              <h2 className="text-lg font-serif font-medium text-premium-900 capitalize text-center">{user.name}</h2>
+              <h2 className="text-lg font-serif font-medium text-premium-900 capitalize text-center">{user.firstName} {user.lastName}</h2>
               <p className="text-xs text-premium-500 mb-6">{user.email}</p>
 
               <div className="w-full space-y-2 border-t border-premium-100 pt-6">
@@ -138,33 +148,25 @@ export default function ProfilePage() {
                   <h2 className="text-2xl font-serif text-premium-900 mb-6">Meus Dados</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-xs font-medium text-premium-500 uppercase tracking-widest mb-2">Primeiro Nome</label>
+                      <label className="block text-[10px] font-bold text-premium-500 uppercase tracking-widest mb-2">Primeiro Nome</label>
                       <input 
                         type="text" 
-                        value={user.firstName || user.name?.split(' ')[0] || ''} 
-                        onChange={(e) => {
-                          const newUser = {...user, firstName: e.target.value};
-                          setUser(newUser);
-                          localStorage.setItem('user', JSON.stringify(newUser));
-                        }}
+                        value={user.firstName || ''} 
+                        onChange={(e) => handleUpdateUser('firstName', e.target.value)}
                         className="w-full border border-premium-200 bg-white px-4 py-3 text-sm text-premium-900 rounded-sm focus:border-accent outline-none" 
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-premium-500 uppercase tracking-widest mb-2">Sobrenome</label>
+                      <label className="block text-[10px] font-bold text-premium-500 uppercase tracking-widest mb-2">Sobrenome</label>
                       <input 
                         type="text" 
-                        value={user.lastName || user.name?.split(' ').slice(1).join(' ') || ''} 
-                        onChange={(e) => {
-                          const newUser = {...user, lastName: e.target.value};
-                          setUser(newUser);
-                          localStorage.setItem('user', JSON.stringify(newUser));
-                        }}
+                        value={user.lastName || ''} 
+                        onChange={(e) => handleUpdateUser('lastName', e.target.value)}
                         className="w-full border border-premium-200 bg-white px-4 py-3 text-sm text-premium-900 rounded-sm focus:border-accent outline-none" 
                       />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium text-premium-500 uppercase tracking-widest mb-2">E-mail de Cadastro</label>
+                      <label className="block text-[10px] font-bold text-premium-500 uppercase tracking-widest mb-2">E-mail de Cadastro</label>
                       <input type="email" value={user.email} readOnly className="w-full border border-premium-200 bg-premium-50 px-4 py-3 text-sm text-premium-400 rounded-sm outline-none" />
                     </div>
                   </div>
