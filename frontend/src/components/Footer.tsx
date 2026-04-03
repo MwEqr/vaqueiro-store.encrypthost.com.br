@@ -1,4 +1,4 @@
-import { Instagram } from 'lucide-react';
+import { Instagram, Phone, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -14,7 +14,9 @@ export default function Footer() {
               Tradição e qualidade em artigos sertanejos. Do campo para você, oferecemos o melhor da moda country com a resistência que você precisa.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-premium-400 hover:text-white transition-colors"><Instagram className="w-5 h-5" /></a>
+              <a href="https://www.instagram.com/banditcompany_oficial/" target="_blank" rel="noopener noreferrer" className="text-premium-400 hover:text-white transition-colors">
+                <Instagram className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
@@ -29,12 +31,24 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-white font-medium uppercase tracking-wider text-sm mb-4">Ajuda</h4>
-            <ul className="space-y-3">
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Atendimento</a></li>
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Trocas e Devoluções</a></li>
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Política de Privacidade</a></li>
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Dúvidas Frequentes</a></li>
+            <h4 className="text-white font-medium uppercase tracking-wider text-sm mb-4">Contato</h4>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3">
+                <Phone className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-white text-xs font-bold uppercase tracking-widest mb-1">WhatsApp</p>
+                  <a href="https://wa.me/5516994655188" target="_blank" rel="noopener noreferrer" className="text-premium-400 hover:text-white transition-colors text-sm">
+                    (16) 99465-5188
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-accent shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-white text-xs font-bold uppercase tracking-widest mb-1">Localização</p>
+                  <p className="text-premium-400 text-sm">Franca - SP</p>
+                </div>
+              </li>
             </ul>
           </div>
 
