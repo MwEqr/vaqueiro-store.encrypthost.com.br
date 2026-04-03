@@ -3,7 +3,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { User, ShoppingBag, LogOut, Camera, Loader2, Package, CheckCircle } from 'lucide-react';
 import { fetchOrders, uploadImage, updateProfile, getRepayUrl } from '../services/api';
 
-export default function ProfilePage() {
+interface ProfilePageProps {
+  onOpenLogin: () => void;
+}
+
+export default function ProfilePage({ onOpenLogin }: ProfilePageProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const initialTab = searchParams.get('tab') || 'perfil';
@@ -84,8 +88,11 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    navigate('/');
-    window.location.reload();
+    onOpenLogin(); // Abre o modal para mostrar o feedback de logout
+    setTimeout(() => {
+      navigate('/');
+      window.location.reload();
+    }, 1500);
   };
 
   const handleRepay = async (orderId: number) => {
