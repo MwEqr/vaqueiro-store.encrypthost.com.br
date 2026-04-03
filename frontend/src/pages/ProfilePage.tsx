@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { User, ShoppingBag, LogOut, Camera, Loader2, Package, CheckCircle, AlertCircle } from 'lucide-react';
+import { User, ShoppingBag, LogOut, Camera, Loader2, Package, CheckCircle } from 'lucide-react';
 import { fetchOrders, uploadImage, updateProfile, getRepayUrl } from '../services/api';
 
 export default function ProfilePage() {
