@@ -1526,3 +1526,38 @@ src/components/LoginModal.tsx(3,1): error TS6192: All imports in import declarat
 
 --- Deploy finished at 2026-04-03 13:09:19 ---
 
+--- Deploy started at 2026-04-04 01:15:10 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+src/App.tsx(88,58): error TS2322: Type '{ onOpenLogin: () => void; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'onOpenLogin' does not exist on type 'IntrinsicAttributes'.
+src/components/LoginModal.tsx(1,26): error TS6133: 'CheckCircle' is declared but its value is never read.
+src/components/LoginModal.tsx(1,39): error TS6133: 'LogOut' is declared but its value is never read.
+src/components/LoginModal.tsx(2,20): error TS6133: 'useEffect' is declared but its value is never read.
+src/components/LoginModal.tsx(3,1): error TS6192: All imports in import declaration are unused.
+
+--- Deploy finished at 2026-04-04 01:15:24 ---
+

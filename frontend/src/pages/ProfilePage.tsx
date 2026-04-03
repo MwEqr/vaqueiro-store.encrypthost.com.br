@@ -4,7 +4,7 @@ import { User, ShoppingBag, LogOut, Camera, Loader2, Package, CheckCircle } from
 import { fetchOrders, uploadImage, updateProfile, getRepayUrl } from '../services/api';
 import { useCart } from '../context/CartContext';
 
-export default function ProfilePage() {
+export default function ProfilePage({ onOpenLogin: _onOpenLogin }: { onOpenLogin: () => void }) {
   const { showNotification } = useCart();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

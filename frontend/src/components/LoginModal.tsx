@@ -1,6 +1,5 @@
-import { X, Eye, EyeOff, CheckCircle, LogOut } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { X, Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import { login, register } from '../services/api';
 import { useCart } from '../context/CartContext';
 
