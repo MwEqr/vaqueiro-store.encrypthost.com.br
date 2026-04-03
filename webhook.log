@@ -1,0 +1,1528 @@
+--- Deploy started at 2026-04-03 02:54:20 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   fcbf80e..feb396d  main       -> origin/main
+Updating fcbf80e..feb396d
+Fast-forward
+ backend/api/coupons.php                          |  70 ++++++--
+ backend/api/products.php                         | 163 ++++++++++++------
+ frontend/src/components/PromoCarousel.tsx        |  44 ++++-
+ frontend/src/components/admin/CouponTab.tsx      | 104 ++++++++---
+ frontend/src/components/admin/ProductTab.tsx     | 209 ++++++++++++++++++++---
+ frontend/src/data/mockProducts.ts                | 185 --------------------
+ frontend/src/pages/ProductPage.tsx               |  73 +++++---
+ frontend/src/services/api.ts                     |  24 +++
+ wordpress/wp-content/mu-plugins/fix-wp-login.php |  35 ++++
+ 9 files changed, 571 insertions(+), 336 deletions(-)
+ delete mode 100644 frontend/src/data/mockProducts.ts
+ create mode 100644 wordpress/wp-content/mu-plugins/fix-wp-login.php
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.12.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+npm notice To update run: npm install -g npm@11.12.1
+npm notice
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+sh: line 1: tsc: command not found
+
+--- Deploy finished at 2026-04-03 02:54:23 ---
+
+--- Deploy started at 2026-04-03 02:57:24 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-mnVhlv81.css   46.40 kB │ gzip:   8.60 kB
+dist/assets/index-DAmNadyc.js   540.07 kB │ gzip: 160.78 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 1.31s
+
+--- Deploy finished at 2026-04-03 02:57:37 ---
+
+--- Deploy started at 2026-04-03 03:03:44 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-mnVhlv81.css   46.40 kB │ gzip:   8.60 kB
+dist/assets/index-DAmNadyc.js   540.07 kB │ gzip: 160.78 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 908ms
+
+--- Deploy finished at 2026-04-03 03:03:54 ---
+
+--- Deploy started at 2026-04-03 03:17:27 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   feb396d..e116697  main       -> origin/main
+Updating feb396d..e116697
+Fast-forward
+ backend/api/categories.php                    | 53 +++++++++++++++++++--------
+ frontend/src/components/admin/CategoryTab.tsx | 33 +++++++++++------
+ frontend/src/components/admin/CouponTab.tsx   |  4 +-
+ frontend/src/components/admin/ProductTab.tsx  |  4 +-
+ frontend/src/pages/admin/AdminDashboard.tsx   | 38 +++++++++++++++----
+ frontend/src/services/api.ts                  | 12 ++++++
+ 6 files changed, 104 insertions(+), 40 deletions(-)
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 991ms
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-mnVhlv81.css   46.40 kB │ gzip:   8.60 kB
+dist/assets/index-Bxqa5Qnp.js   541.40 kB │ gzip: 161.02 kB
+
+✓ built in 500ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 03:17:33 ---
+
+--- Deploy started at 2026-04-03 03:25:36 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   e116697..bcf9cd9  main       -> origin/main
+Updating e116697..bcf9cd9
+Fast-forward
+ backend/api/upload.php                       |  30 ++++++++
+ frontend/src/components/CategoryGrid.tsx     | 100 +++++++++++++++++----------
+ frontend/src/components/admin/ProductTab.tsx |  41 +++++++++--
+ frontend/src/pages/CollectionPage.tsx        |  25 +++++--
+ frontend/src/services/api.ts                 |   8 +++
+ 5 files changed, 157 insertions(+), 47 deletions(-)
+ create mode 100644 backend/api/upload.php
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-BXEQ4nZn.css   46.53 kB │ gzip:   8.63 kB
+dist/assets/index-R-cXF-78.js   544.32 kB │ gzip: 162.02 kB
+
+✓ built in 796ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 03:25:46 ---
+
+--- Deploy started at 2026-04-03 03:30:17 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   bcf9cd9..2186aad  main       -> origin/main
+Updating bcf9cd9..2186aad
+Fast-forward
+ backend/index.php                        |  3 +++
+ frontend/src/components/CategoryGrid.tsx | 20 +++++++++++---------
+ frontend/src/services/api.ts             |  2 +-
+ 3 files changed, 15 insertions(+), 10 deletions(-)
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 912ms
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-B5uuygyj.css   46.59 kB │ gzip:   8.68 kB
+dist/assets/index-DiP6wrbG.js   544.35 kB │ gzip: 162.10 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 621ms
+
+--- Deploy finished at 2026-04-03 03:30:25 ---
+
+--- Deploy started at 2026-04-03 03:38:42 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   2186aad..7a9b721  main       -> origin/main
+Updating 2186aad..7a9b721
+Fast-forward
+ backend/api/auth.php                      |  64 ++++++++++----
+ frontend/src/components/PromoCarousel.tsx |  22 ++++-
+ frontend/src/pages/CheckoutPage.tsx       | 139 +++++++++++++++++++++++++++---
+ 3 files changed, 191 insertions(+), 34 deletions(-)
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Rhm3TbnU.css   46.90 kB │ gzip:   8.76 kB
+dist/assets/index-C3e9hsbX.js   547.72 kB │ gzip: 163.02 kB
+
+✓ built in 820ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 03:38:50 ---
+
+--- Deploy started at 2026-04-03 03:54:07 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   7a9b721..18d0b4d  main       -> origin/main
+Updating 7a9b721..18d0b4d
+Fast-forward
+ backend/api/checkout.php            | 103 ++++++++++++++++++++++++++++++++++++
+ backend/index.php                   |   3 ++
+ frontend/src/pages/CheckoutPage.tsx |  54 +++++++++++++++++--
+ frontend/src/services/api.ts        |  10 ++++
+ 4 files changed, 167 insertions(+), 3 deletions(-)
+ create mode 100644 backend/api/checkout.php
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Rhm3TbnU.css   46.90 kB │ gzip:   8.76 kB
+dist/assets/index-ChKhF280.js   548.47 kB │ gzip: 163.30 kB
+
+✓ built in 510ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 03:54:14 ---
+
+--- Deploy started at 2026-04-03 03:59:18 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   18d0b4d..f75c95a  main       -> origin/main
+Updating 18d0b4d..f75c95a
+Fast-forward
+ backend/api/checkout.php | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Rhm3TbnU.css   46.90 kB │ gzip:   8.76 kB
+dist/assets/index-ChKhF280.js   548.47 kB │ gzip: 163.30 kB
+
+✓ built in 623ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 03:59:24 ---
+
+--- Deploy started at 2026-04-03 04:16:46 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Rhm3TbnU.css   46.90 kB │ gzip:   8.76 kB
+dist/assets/index-ChKhF280.js   548.47 kB │ gzip: 163.30 kB
+
+✓ built in 600ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 04:16:53 ---
+
+--- Deploy started at 2026-04-03 07:17:33 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Rhm3TbnU.css   46.90 kB │ gzip:   8.76 kB
+dist/assets/index-ChKhF280.js   548.47 kB │ gzip: 163.30 kB
+
+✓ built in 538ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 07:17:39 ---
+
+--- Deploy started at 2026-04-03 07:25:41 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   96093a9..aac4d05  main       -> origin/main
+Updating 96093a9..aac4d05
+Fast-forward
+ frontend/src/pages/CheckoutPage.tsx | 57 ++++++++++++++++++++++++++++++++-----
+ 1 file changed, 50 insertions(+), 7 deletions(-)
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Rhm3TbnU.css   46.90 kB │ gzip:   8.76 kB
+dist/assets/index-CZxlLwpR.js   549.11 kB │ gzip: 163.49 kB
+
+✓ built in 534ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 07:25:47 ---
+
+--- Deploy started at 2026-04-03 07:31:30 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   aac4d05..be518af  main       -> origin/main
+Updating aac4d05..be518af
+Fast-forward
+ frontend/src/pages/CheckoutPage.tsx | 126 ++++++++++++++++++++++--------------
+ 1 file changed, 76 insertions(+), 50 deletions(-)
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 960ms
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Bb0XD0Q2.css   47.23 kB │ gzip:   8.82 kB
+dist/assets/index-W5WyqnGV.js   554.14 kB │ gzip: 165.29 kB
+
+✓ built in 564ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 07:31:37 ---
+
+--- Deploy started at 2026-04-03 07:38:16 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 970ms
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2194 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-Bb0XD0Q2.css   47.23 kB │ gzip:   8.82 kB
+dist/assets/index-FcSVdyBk.js   554.27 kB │ gzip: 165.33 kB
+
+✓ built in 567ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 07:38:22 ---
+
+--- Deploy started at 2026-04-03 07:48:24 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+   a2caf96..ec0ab62  main       -> origin/main
+Updating a2caf96..ec0ab62
+Fast-forward
+ backend/api/orders.php                      |  77 ++++++++++
+ backend/index.php                           |   3 +
+ frontend/src/App.tsx                        |   2 +
+ frontend/src/components/Header.tsx          |  97 +++++++++++--
+ frontend/src/components/LoginModal.tsx      |  14 ++
+ frontend/src/components/admin/OrderTab.tsx  | 151 +++++++++++++++++++
+ frontend/src/pages/CheckoutPage.tsx         |  37 ++++-
+ frontend/src/pages/ProfilePage.tsx          | 217 ++++++++++++++++++++++++++++
+ frontend/src/pages/admin/AdminDashboard.tsx |   9 +-
+ frontend/src/services/api.ts                |  22 +++
+ 10 files changed, 606 insertions(+), 23 deletions(-)
+ create mode 100644 backend/api/orders.php
+ create mode 100644 frontend/src/components/admin/OrderTab.tsx
+ create mode 100644 frontend/src/pages/ProfilePage.tsx
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 641ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 07:48:32 ---
+
+--- Deploy started at 2026-04-03 07:48:49 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 732ms
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 547ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 07:48:56 ---
+
+--- Deploy started at 2026-04-03 07:57:26 ---
+
+[GIT PULL]
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 617ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 07:57:33 ---
+
+--- Deploy started at 2026-04-03 08:01:27 ---
+
+[GIT PULL]
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 725ms
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 465ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 08:01:33 ---
+
+--- Deploy started at 2026-04-03 08:20:11 ---
+
+[GIT PULL]
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 627ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 08:20:19 ---
+
+--- Deploy started at 2026-04-03 08:24:06 ---
+
+[GIT PULL]
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 948ms
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 730ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 08:24:15 ---
+
+--- Deploy started at 2026-04-03 08:47:14 ---
+
+[GIT PULL]
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 824ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 08:47:21 ---
+
+--- Deploy started at 2026-04-03 08:53:06 ---
+
+[GIT PULL]
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CYdU1d1X.css   49.38 kB │ gzip:   9.20 kB
+dist/assets/index-DisQbOw-.js   571.98 kB │ gzip: 168.92 kB
+
+✓ built in 623ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 08:53:18 ---
+
+--- Deploy started at 2026-04-03 09:00:34 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+npm error code EACCES
+npm error syscall open
+npm error path /www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json
+npm error errno -13
+npm error Error: EACCES: permission denied, open '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error     at async open (node:internal/fs/promises:634:25)
+npm error     at async writeFile (node:internal/fs/promises:1206:14)
+npm error     at async Promise.all (index 0)
+npm error     at async [saveIdealTree] (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:1526:7)
+npm error     at async Arborist.reify (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:148:5)
+npm error     at async Install.exec (/usr/lib/node_modules/npm/lib/commands/install.js:150:5)
+npm error     at async Npm.exec (/usr/lib/node_modules/npm/lib/npm.js:207:9)
+npm error     at async module.exports (/usr/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'open',
+npm error   path: '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /home/www/.npm/_logs/2026-04-03T01_00_35_768Z-debug-0.log
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-CUHGVOnl.css   49.61 kB │ gzip:   9.22 kB
+dist/assets/index-Dylip1yi.js   573.70 kB │ gzip: 169.27 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 971ms
+
+--- Deploy finished at 2026-04-03 09:00:47 ---
+
+--- Deploy started at 2026-04-03 09:08:16 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+npm error code EACCES
+npm error syscall open
+npm error path /www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json
+npm error errno -13
+npm error Error: EACCES: permission denied, open '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error     at async open (node:internal/fs/promises:634:25)
+npm error     at async writeFile (node:internal/fs/promises:1206:14)
+npm error     at async Promise.all (index 0)
+npm error     at async [saveIdealTree] (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:1526:7)
+npm error     at async Arborist.reify (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:148:5)
+npm error     at async Install.exec (/usr/lib/node_modules/npm/lib/commands/install.js:150:5)
+npm error     at async Npm.exec (/usr/lib/node_modules/npm/lib/npm.js:207:9)
+npm error     at async module.exports (/usr/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'open',
+npm error   path: '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /home/www/.npm/_logs/2026-04-03T01_08_16_888Z-debug-0.log
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-BiDLuHGS.css   50.09 kB │ gzip:   9.29 kB
+dist/assets/index-BD1J8lBU.js   575.26 kB │ gzip: 169.40 kB
+
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 697ms
+
+--- Deploy finished at 2026-04-03 09:08:25 ---
+
+--- Deploy started at 2026-04-03 09:37:31 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+npm error code EACCES
+npm error syscall open
+npm error path /www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json
+npm error errno -13
+npm error Error: EACCES: permission denied, open '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error     at async open (node:internal/fs/promises:634:25)
+npm error     at async writeFile (node:internal/fs/promises:1206:14)
+npm error     at async Promise.all (index 0)
+npm error     at async [saveIdealTree] (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:1526:7)
+npm error     at async Arborist.reify (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:148:5)
+npm error     at async Install.exec (/usr/lib/node_modules/npm/lib/commands/install.js:150:5)
+npm error     at async Npm.exec (/usr/lib/node_modules/npm/lib/npm.js:207:9)
+npm error     at async module.exports (/usr/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'open',
+npm error   path: '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /home/www/.npm/_logs/2026-04-03T01_37_31_805Z-debug-0.log
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-BiDLuHGS.css   50.09 kB │ gzip:   9.29 kB
+dist/assets/index-CLgaromC.js   575.81 kB │ gzip: 169.54 kB
+
+✓ built in 753ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 09:37:40 ---
+
+--- Deploy started at 2026-04-03 10:05:06 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+npm error code EACCES
+npm error syscall open
+npm error path /www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json
+npm error errno -13
+npm error Error: EACCES: permission denied, open '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error     at async open (node:internal/fs/promises:634:25)
+npm error     at async writeFile (node:internal/fs/promises:1206:14)
+npm error     at async Promise.all (index 0)
+npm error     at async [saveIdealTree] (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:1526:7)
+npm error     at async Arborist.reify (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:148:5)
+npm error     at async Install.exec (/usr/lib/node_modules/npm/lib/commands/install.js:150:5)
+npm error     at async Npm.exec (/usr/lib/node_modules/npm/lib/npm.js:207:9)
+npm error     at async module.exports (/usr/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'open',
+npm error   path: '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /home/www/.npm/_logs/2026-04-03T02_05_06_859Z-debug-0.log
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-4Ebb9tab.css   50.25 kB │ gzip:   9.32 kB
+dist/assets/index-B5PxR77y.js   576.40 kB │ gzip: 169.66 kB
+
+✓ built in 689ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 10:05:14 ---
+
+--- Deploy started at 2026-04-03 10:33:02 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+npm error code EACCES
+npm error syscall open
+npm error path /www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json
+npm error errno -13
+npm error Error: EACCES: permission denied, open '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error     at async open (node:internal/fs/promises:634:25)
+npm error     at async writeFile (node:internal/fs/promises:1206:14)
+npm error     at async Promise.all (index 0)
+npm error     at async [saveIdealTree] (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:1526:7)
+npm error     at async Arborist.reify (/usr/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:148:5)
+npm error     at async Install.exec (/usr/lib/node_modules/npm/lib/commands/install.js:150:5)
+npm error     at async Npm.exec (/usr/lib/node_modules/npm/lib/npm.js:207:9)
+npm error     at async module.exports (/usr/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'open',
+npm error   path: '/www/wwwroot/vaqueiro-store.encrypthost.com.br/frontend/package-lock.json'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /home/www/.npm/_logs/2026-04-03T02_33_02_469Z-debug-0.log
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+src/pages/ProfilePage.tsx(3,76): error TS6133: 'AlertCircle' is declared but its value is never read.
+
+--- Deploy finished at 2026-04-03 10:33:08 ---
+
+--- Deploy started at 2026-04-03 11:40:01 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-4Ebb9tab.css   50.25 kB │ gzip:   9.32 kB
+dist/assets/index-CXsKdOnW.js   576.87 kB │ gzip: 169.82 kB
+
+✓ built in 841ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 11:40:12 ---
+
+--- Deploy started at 2026-04-03 12:00:24 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-4Ebb9tab.css   50.25 kB │ gzip:   9.32 kB
+dist/assets/index-BG9APKT5.js   577.61 kB │ gzip: 170.08 kB
+
+✓ built in 561ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 12:00:33 ---
+
+--- Deploy started at 2026-04-03 12:11:38 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-DqDrUpDJ.css   51.64 kB │ gzip:   9.43 kB
+dist/assets/index-CAhu10Q0.js   579.87 kB │ gzip: 170.43 kB
+
+✓ built in 644ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 12:11:46 ---
+
+--- Deploy started at 2026-04-03 12:32:39 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+src/App.tsx(75,77): error TS2304: Cannot find name 'setIsLoginOpen'.
+src/components/LoginModal.tsx(27,3): error TS2304: Cannot find name 'useEffect'.
+
+--- Deploy finished at 2026-04-03 12:32:44 ---
+
+--- Deploy started at 2026-04-03 13:02:11 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+vite v8.0.0 building client environment for production...
+[2Ktransforming...✓ 2196 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.80 kB │ gzip:   0.45 kB
+dist/assets/index-FfTWV6NE.css   51.66 kB │ gzip:   9.44 kB
+dist/assets/index-BEZROSs8.js   581.07 kB │ gzip: 170.71 kB
+
+✓ built in 692ms
+[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+
+--- Deploy finished at 2026-04-03 13:02:21 ---
+
+--- Deploy started at 2026-04-03 13:09:14 ---
+
+[GIT PULL]
+From https://github.com/MwEqr/vaqueiro-store.encrypthost.com.br
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+[NPM INSTALL]
+
+up to date, audited 205 packages in 1s
+
+55 packages are looking for funding
+  run `npm fund` for details
+
+2 vulnerabilities (1 moderate, 1 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+[NPM BUILD]
+
+> vaqueiro-store@0.0.0 build
+> tsc -b && vite build
+
+src/App.tsx(88,58): error TS2322: Type '{ onOpenLogin: () => void; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'onOpenLogin' does not exist on type 'IntrinsicAttributes'.
+src/components/LoginModal.tsx(1,26): error TS6133: 'CheckCircle' is declared but its value is never read.
+src/components/LoginModal.tsx(1,39): error TS6133: 'LogOut' is declared but its value is never read.
+src/components/LoginModal.tsx(2,20): error TS6133: 'useEffect' is declared but its value is never read.
+src/components/LoginModal.tsx(3,1): error TS6192: All imports in import declaration are unused.
+
+--- Deploy finished at 2026-04-03 13:09:19 ---
+
