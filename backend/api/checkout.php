@@ -44,6 +44,7 @@ if (!empty($data['coupon'])) {
 
 // Corpo do Pedido para o WooCommerce
 $payload = [
+    'customer_id' => !empty($data['customer']['id']) ? (int)$data['customer']['id'] : 0,
     'payment_method' => 'mercadopago', // Tenta forçar o mercado pago
     'payment_method_title' => 'Mercado Pago',
     'set_paid' => false,

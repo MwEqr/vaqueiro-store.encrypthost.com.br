@@ -109,6 +109,20 @@ export const register = async (firstName: string, lastName: string, email: strin
   }
 };
 
+export const updateProfile = async (userData: any) => {
+  try {
+    const response = await fetch(`${API_URL}auth`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'update_profile', ...userData })
+    });
+    return await response.json();
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    return { status: 'error', message: 'Connection error' };
+  }
+};
+
 export const createOrder = async (payload: any) => {
   const res = await fetch(`${API_URL}checkout`, {
     method: 'POST',

@@ -28,10 +28,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         "name" => $user->display_name,
                         "firstName" => get_user_meta($user->ID, 'first_name', true) ?: $user->display_name,
                         "lastName" => get_user_meta($user->ID, 'last_name', true) ?: '',
-                        "email" => $user->user_email
+                        "email" => $user->user_email,
+                        "avatar" => get_user_meta($user->ID, 'avatar_url', true) ?: ''
                     ]
                 ]);
             }
+        } elseif ($data->action === 'update_profile') {
+            $user_id = (int)$data->id;
+            
+            if (!$user_id) {
+                http_response_code(400);
+                die(json_encode(["status" => "error", "message" => "ID do usuário ausente."]));
+            }
+
+            if (isset($data->firstName)) {
+                update_user_meta($user_id, 'first_name', sanitize_text_field($data->firstName));
+            }
+            if (isset($data->lastName)) {
+                update_user_meta($user_id, 'last_name', sanitize_text_field($data->lastName));
+            }
+            if (isset($data->avatar)) {
+                update_user_meta($user_id, 'avatar_url', sanitize_url($data->avatar));
+            }
+
+            // Atualiza display name
+            $firstName = get_user_meta($user_id, 'first_name', true);
+            $lastName = get_user_meta($user_id, 'last_name', true);
+            wp_update_user([
+                'ID' => $user_id,
+                'display_name' => trim($firstName . ' ' . $lastName)
+            ]);
+
+            echo json_encode([
+                "status" => "success", 
+                "message" => "Perfil atualizado!",
+                "user" => [
+                    "id" => $user_id,
+                    "firstName" => $firstName,
+                    "lastName" => $lastName,
+                    "avatar" => get_user_meta($user_id, 'avatar_url', true)
+                ]
+            ]);
         } elseif ($data->action === 'register') {
             $firstName = sanitize_text_field($data->firstName);
             $lastName = sanitize_text_field($data->lastName);

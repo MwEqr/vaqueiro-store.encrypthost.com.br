@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { User, ShoppingBag, LogOut, Camera, Loader2, Package, CheckCircle } from 'lucide-react';
-import { fetchOrders, uploadImage } from '../services/api';
+import { fetchOrders, uploadImage, updateProfile } from '../services/api';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -47,10 +47,17 @@ export default function ProfilePage() {
     }
   };
 
-  const handleUpdateUser = (field: string, value: string) => {
+  const handleUpdateUser = async (field: string, value: string) => {
     const updatedUser = { ...user, [field]: value };
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
+    
+    // Salva no WordPress de forma persistente
+    try {
+      await updateProfile({ id: user.id, [field]: value });
+    } catch (e) {
+      console.error("Erro ao sincronizar perfil", e);
+    }
   };
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +66,12 @@ export default function ProfilePage() {
       try {
         const res = await uploadImage(e.target.files[0]);
         if (res.url) {
-          handleUpdateUser('avatar', res.url);
+          const updatedUser = { ...user, avatar: res.url };
+          setUser(updatedUser);
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+          
+          // Salva a foto permanentemente no banco de dados do WordPress
+          await updateProfile({ id: user.id, avatar: res.url });
         }
       } catch (err) {
         alert('Erro ao salvar foto de perfil.');

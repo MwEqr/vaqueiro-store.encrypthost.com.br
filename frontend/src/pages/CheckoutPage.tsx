@@ -140,11 +140,21 @@ export default function CheckoutPage() {
     
     setLoadingCheckout(true);
 
+    const storedUser = localStorage.getItem('user');
+    let customerId = null;
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        customerId = parsed.id;
+      } catch (e) {}
+    }
+
     const payload = {
       items,
       freight,
       coupon: discount > 0 ? couponCode : null,
       customer: {
+        id: customerId,
         firstName: firstName || 'Cliente',
         lastName: lastName || 'Vaqueiro',
         email: email || 'cliente@vaqueirostore.com',
