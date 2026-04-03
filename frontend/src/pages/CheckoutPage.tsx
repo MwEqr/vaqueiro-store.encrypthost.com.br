@@ -45,10 +45,10 @@ export default function CheckoutPage() {
   const currentUser = getUserData();
   const nameParts = currentUser?.name ? currentUser.name.trim().split(' ') : [];
 
-  // Form states com auto-preenchimento nativo
+  // Form states com auto-preenchimento nativo e sincronizado
   const [email, setEmail] = useState(currentUser?.email || '');
-  const [firstName, setFirstName] = useState(nameParts[0] || '');
-  const [lastName, setLastName] = useState(nameParts.length > 1 ? nameParts.slice(1).join(' ') : '');
+  const [firstName, setFirstName] = useState(currentUser?.firstName || nameParts[0] || '');
+  const [lastName, setLastName] = useState(currentUser?.lastName || (nameParts.length > 1 ? nameParts.slice(1).join(' ') : ''));
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
   const [cpfError, setCpfError] = useState('');

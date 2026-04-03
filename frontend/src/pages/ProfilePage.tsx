@@ -138,19 +138,41 @@ export default function ProfilePage() {
                   <h2 className="text-2xl font-serif text-premium-900 mb-6">Meus Dados</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-xs font-medium text-premium-500 uppercase tracking-widest mb-2">Nome Completo</label>
-                      <input type="text" value={user.name} readOnly className="w-full border border-premium-200 bg-premium-50 px-4 py-3 text-sm text-premium-900 rounded-sm" />
+                      <label className="block text-xs font-medium text-premium-500 uppercase tracking-widest mb-2">Primeiro Nome</label>
+                      <input 
+                        type="text" 
+                        value={user.firstName || user.name?.split(' ')[0] || ''} 
+                        onChange={(e) => {
+                          const newUser = {...user, firstName: e.target.value};
+                          setUser(newUser);
+                          localStorage.setItem('user', JSON.stringify(newUser));
+                        }}
+                        className="w-full border border-premium-200 bg-white px-4 py-3 text-sm text-premium-900 rounded-sm focus:border-accent outline-none" 
+                      />
                     </div>
                     <div>
+                      <label className="block text-xs font-medium text-premium-500 uppercase tracking-widest mb-2">Sobrenome</label>
+                      <input 
+                        type="text" 
+                        value={user.lastName || user.name?.split(' ').slice(1).join(' ') || ''} 
+                        onChange={(e) => {
+                          const newUser = {...user, lastName: e.target.value};
+                          setUser(newUser);
+                          localStorage.setItem('user', JSON.stringify(newUser));
+                        }}
+                        className="w-full border border-premium-200 bg-white px-4 py-3 text-sm text-premium-900 rounded-sm focus:border-accent outline-none" 
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
                       <label className="block text-xs font-medium text-premium-500 uppercase tracking-widest mb-2">E-mail de Cadastro</label>
-                      <input type="email" value={user.email} readOnly className="w-full border border-premium-200 bg-premium-50 px-4 py-3 text-sm text-premium-900 rounded-sm" />
+                      <input type="email" value={user.email} readOnly className="w-full border border-premium-200 bg-premium-50 px-4 py-3 text-sm text-premium-400 rounded-sm outline-none" />
                     </div>
                   </div>
                   <div className="mt-8 bg-green-50 border border-green-200 p-4 rounded-sm flex items-start gap-3">
                     <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-medium text-green-900">Conta Verificada e Ativa</h4>
-                      <p className="text-xs text-green-700 mt-1">Sua conta está sincronizada com a loja. Você já pode fazer pedidos e usar cupons exclusivos de cliente.</p>
+                      <h4 className="text-sm font-medium text-green-900">Sincronização Ativa</h4>
+                      <p className="text-xs text-green-700 mt-1">As alterações feitas aqui serão aplicadas automaticamente no seu próximo Checkout.</p>
                     </div>
                   </div>
                 </div>
