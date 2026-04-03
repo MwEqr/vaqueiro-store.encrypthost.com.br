@@ -95,12 +95,12 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const register = async (name: string, email: string, password: string) => {
+export const register = async (firstName: string, lastName: string, email: string, password: string) => {
   try {
     const response = await fetch(`${API_URL}auth`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'register', name, email, password })
+      body: JSON.stringify({ action: 'register', firstName, lastName, email, password })
     });
     return await response.json();
   } catch (error) {

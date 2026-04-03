@@ -26,12 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "user" => [
                         "id" => $user->ID,
                         "name" => $user->display_name,
+                        "firstName" => get_user_meta($user->ID, 'first_name', true) ?: $user->display_name,
+                        "lastName" => get_user_meta($user->ID, 'last_name', true) ?: '',
                         "email" => $user->user_email
                     ]
                 ]);
             }
         } elseif ($data->action === 'register') {
-            $name = sanitize_text_field($data->name);
+            $firstName = sanitize_text_field($data->firstName);
+            $lastName = sanitize_text_field($data->lastName);
             $email = sanitize_email($data->email);
             $password = $data->password;
 
@@ -52,8 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     
                     wp_update_user([
                         'ID' => $user_id,
-                        'display_name' => $name,
-                        'first_name' => $name
+                        'display_name' => $firstName . ' ' . $lastName,
+                        'first_name' => $firstName,
+                        'last_name' => $lastName
                     ]);
 
                     echo json_encode(["status" => "success", "message" => "Conta criada com sucesso!"]);
