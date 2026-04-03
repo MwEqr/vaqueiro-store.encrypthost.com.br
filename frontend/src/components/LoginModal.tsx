@@ -2,6 +2,7 @@ import { X, Eye, EyeOff, CheckCircle, LogOut } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { login, register } from '../services/api';
+import { useCart } from '../context/CartContext';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -9,12 +10,12 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const { showNotification } = useCart();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showGoogleSoon, setShowGoogleSoon] = useState(false);
-  const [feedback, setFeedback] = useState<{ type: 'login' | 'logout'; name?: string } | null>(null);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -22,17 +23,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     email: '',
     password: ''
   });
-
-  // Identifica se o modal foi aberto para Logout
-  useEffect(() => {
-    if (isOpen && !localStorage.getItem('user') && !feedback) {
-      // Pequeno delay para garantir que o localStorage já foi limpo no ProfilePage
-      setFeedback({ type: 'logout' });
-      setTimeout(() => {
-        setFeedback(null);
-      }, 1500);
-    }
-  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,11 +34,14 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         const result = await login(formData.email, formData.password);
         if (result.status === 'success') {
           localStorage.setItem('user', JSON.stringify(result.user));
-          setFeedback({ type: 'login', name: result.user.firstName });
+          showNotification('Login realizado com sucesso.', 'user', { 
+            name: result.user.firstName, 
+            avatar: result.user.avatar 
+          });
+          onClose();
           setTimeout(() => {
-            onClose();
             window.location.reload(); 
-          }, 2000);
+          }, 1500);
         } else {
           setError(result.message || 'E-mail ou senha incorretos');
         }
@@ -75,31 +68,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       <div className="absolute inset-0 bg-premium-900/60 backdrop-blur-sm" onClick={onClose} />
       
       <div className="relative overflow-hidden bg-white w-full max-w-md p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
-        <AnimatePresence>
-          {feedback && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 z-30 bg-premium-900 flex flex-col items-center justify-center text-white p-8 text-center"
-            >
-              <motion.div 
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="w-20 h-20 bg-accent rounded-full flex items-center justify-center mb-6 shadow-lg shadow-accent/20"
-              >
-                {feedback.type === 'login' ? <CheckCircle className="w-10 h-10" /> : <LogOut className="w-10 h-10" />}
-              </motion.div>
-              <h3 className="text-2xl font-serif mb-2">
-                {feedback.type === 'login' ? `Olá, ${feedback.name}!` : 'Até logo!'}
-              </h3>
-              <p className="text-premium-300 text-sm uppercase tracking-widest font-bold">
-                {feedback.type === 'login' ? 'Login realizado com sucesso.' : 'Você saiu da sua conta.'}
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {showGoogleSoon && (
           <div className="absolute inset-0 z-20 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center animate-in fade-in zoom-in duration-300">
             <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mb-4 shadow-inner">

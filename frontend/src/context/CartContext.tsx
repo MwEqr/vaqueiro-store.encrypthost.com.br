@@ -16,7 +16,11 @@ export interface CartItem {
 interface Notification {
   id: number;
   message: string;
-  type: 'success' | 'error';
+  type: 'success' | 'error' | 'user';
+  user?: {
+    name: string;
+    avatar: string;
+  };
 }
 
 interface CartContextData {
@@ -26,6 +30,7 @@ interface CartContextData {
   updateQuantity: (itemId: number, newQuantity: number) => void;
   totalItems: number;
   cartTotal: number;
+  showNotification: (message: string, type?: 'success' | 'error' | 'user', user?: { name: string; avatar: string }) => void;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
@@ -42,12 +47,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('@vaqueiro/cart', JSON.stringify(items));
   }, [items]);
 
-  const showNotification = (message: string, type: 'success' | 'error' = 'success') => {
+  const showNotification = (message: string, type: 'success' | 'error' | 'user' = 'success', user?: { name: string; avatar: string }) => {
     const id = Date.now();
-    setNotifications(prev => [...prev, { id, message, type }]);
+    setNotifications(prev => [...prev, { id, message, type, user }]);
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== id));
-    }, 3000);
+    }, 4000);
   };
 
   const addToCart = (product: any, size: string, color: string, quantity: number) => {
@@ -95,27 +100,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const cartTotal = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, totalItems, cartTotal }}>
+    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, totalItems, cartTotal, showNotification }}>
       {children}
       
       {/* Notifications Overlay */}
-      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none">
+      <div className="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3 pointer-events-none text-left">
         {notifications.map(n => (
           <div 
             key={n.id} 
             className={`pointer-events-auto flex items-center gap-3 px-6 py-4 rounded-sm shadow-2xl animate-in slide-in-from-right-5 fade-in duration-300 min-w-[300px] border-l-4 ${
-              n.type === 'success' ? 'bg-white border-green-500 text-premium-900' : 'bg-white border-red-500 text-premium-900'
+              n.type === 'success' ? 'bg-white border-green-500 text-premium-900' : 
+              n.type === 'user' ? 'bg-premium-900 border-accent text-white' :
+              'bg-white border-red-500 text-premium-900'
             }`}
           >
-            {n.type === 'success' ? (
-              <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />
-            ) : (
-              <XCircle className="w-5 h-5 text-red-500 shrink-0" />
+            {n.type === 'success' && <CheckCircle className="w-5 h-5 text-green-500 shrink-0" />}
+            {n.type === 'error' && <XCircle className="w-5 h-5 text-red-500 shrink-0" />}
+            
+            {n.type === 'user' && n.user && (
+              <div className="w-10 h-10 rounded-full bg-premium-800 border border-premium-700 overflow-hidden shrink-0 flex items-center justify-center">
+                {n.user.avatar ? (
+                  <img src={n.user.avatar} alt={n.user.name} className="w-full h-full object-cover" />
+                ) : (
+                  <CheckCircle className="w-5 h-5 text-accent" />
+                )}
+              </div>
             )}
-            <p className="text-sm font-medium flex-1">{n.message}</p>
+
+            <div className="flex-1 min-w-0">
+              {n.type === 'user' && n.user && (
+                <p className="text-[10px] font-bold uppercase tracking-widest text-accent mb-0.5">Olá, {n.user.name}</p>
+              )}
+              <p className={`text-sm font-medium ${n.type === 'user' ? 'text-premium-100' : 'text-premium-900'}`}>{n.message}</p>
+            </div>
+
             <button 
               onClick={() => setNotifications(prev => prev.filter(notif => notif.id !== n.id))}
-              className="text-premium-400 hover:text-premium-900 transition-colors"
+              className={`transition-colors ml-2 ${n.type === 'user' ? 'text-premium-400 hover:text-white' : 'text-premium-400 hover:text-premium-900'}`}
             >
               <X className="w-4 h-4" />
             </button>
