@@ -49,7 +49,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       {!isAdminPage && <Footer />}
 
-      {!isAdminPage && <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />}
+      {!isAdminPage && (
+        <CartDrawer 
+          isOpen={isCartOpen} 
+          onClose={() => setIsCartOpen(false)} 
+          onOpenLogin={() => setIsLoginOpen(true)}
+        />
+      )}
       {!isAdminPage && <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />}
     </div>
   );

@@ -1,6 +1,18 @@
-import { Instagram, Phone, MapPin } from 'lucide-react';
+import { Instagram, Phone, MapPin, MessageCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { fetchCategories } from '../services/api';
 
 export default function Footer() {
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const data = await fetchCategories();
+      setCategories(data.slice(0, 5)); // Pega as 5 primeiras
+    };
+    loadCategories();
+  }, []);
+
   return (
     <footer className="bg-premium-900 text-premium-100 py-16 border-t border-premium-800 mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,16 +29,28 @@ export default function Footer() {
               <a href="https://www.instagram.com/banditcompany_oficial/" target="_blank" rel="noopener noreferrer" className="text-premium-400 hover:text-white transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
+              <a href="https://wa.me/5516994655188" target="_blank" rel="noopener noreferrer" className="text-premium-400 hover:text-white transition-colors">
+                <MessageCircle className="w-5 h-5" />
+              </a>
             </div>
           </div>
 
           <div>
             <h4 className="text-white font-medium uppercase tracking-wider text-sm mb-4">Loja</h4>
             <ul className="space-y-3">
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Botas</a></li>
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Chapéus</a></li>
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Acessórios</a></li>
-              <li><a href="#" className="text-premium-400 hover:text-white transition-colors text-sm">Vestuário</a></li>
+              {categories.length > 0 ? categories.map((cat) => (
+                <li key={cat.id}>
+                  <a href={`/colecao?category=${cat.id}`} className="text-premium-400 hover:text-white transition-colors text-sm capitalize">
+                    {cat.name.toLowerCase()}
+                  </a>
+                </li>
+              )) : (
+                <>
+                  <li><a href="/colecao" className="text-premium-400 hover:text-white transition-colors text-sm">Botas</a></li>
+                  <li><a href="/colecao" className="text-premium-400 hover:text-white transition-colors text-sm">Chapéus</a></li>
+                  <li><a href="/colecao" className="text-premium-400 hover:text-white transition-colors text-sm">Acessórios</a></li>
+                </>
+              )}
             </ul>
           </div>
 
