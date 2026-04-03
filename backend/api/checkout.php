@@ -102,26 +102,26 @@ if ($code === 201 || $code === 200) {
     $payment_url = WC_STORE_URL . '/checkout/order-pay/' . $order_id . '/?pay_for_order=true&key=' . $order->order_key;
 
     if (!empty($mp_access_token)) {
-        // Preparar Preference para o Mercado Pago
-        $mp_items = [];
-        foreach ($data['items'] as $item) {
-            $mp_items[] = [
-                'title' => $item['name'] ?? 'Produto',
-                'quantity' => (int)$item['quantity'],
-                'unit_price' => (float)$item['price'],
-                'currency_id' => 'BRL'
-            ];
+        // Criar uma descrição com os itens para mostrar no Mercado Pago
+        $items_desc = [];
+        foreach ($order->line_items as $l_item) {
+            $items_desc[] = $l_item->quantity . 'x ' . $l_item->name;
+        }
+        $desc = implode(', ', $items_desc);
+        if (strlen($desc) > 250) {
+            $desc = substr($desc, 0, 247) . '...';
         }
 
-        // Frete
-        if (!empty($data['freight']) && $data['freight'] > 0) {
-            $mp_items[] = [
-                'title' => 'Frete (Correios)',
+        // Preparar Preference para o Mercado Pago usando o TOTAL FINAL do pedido do WooCommerce (já com os descontos do cupom aplicados)
+        $mp_items = [
+            [
+                'title' => 'Pedido #' . $order_id,
+                'description' => $desc,
                 'quantity' => 1,
-                'unit_price' => (float)$data['freight'],
+                'unit_price' => (float)$order->total,
                 'currency_id' => 'BRL'
-            ];
-        }
+            ]
+        ];
 
         $mp_payload = [
             'items' => $mp_items,
