@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { ShieldCheck, Ticket, Loader2, CheckCircle, AlertCircle, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,10 +29,26 @@ export default function CheckoutPage() {
   // Toast State
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  // Form states
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  // Leitura síncrona do usuário no momento que a página abre
+  const getUserData = () => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        return JSON.parse(storedUser);
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  };
+
+  const currentUser = getUserData();
+  const nameParts = currentUser?.name ? currentUser.name.trim().split(' ') : [];
+
+  // Form states com auto-preenchimento nativo
+  const [email, setEmail] = useState(currentUser?.email || '');
+  const [firstName, setFirstName] = useState(nameParts[0] || '');
+  const [lastName, setLastName] = useState(nameParts.length > 1 ? nameParts.slice(1).join(' ') : '');
   const [phone, setPhone] = useState('');
   const [cpf, setCpf] = useState('');
   const [cpfError, setCpfError] = useState('');
@@ -48,29 +64,6 @@ export default function CheckoutPage() {
   const [freight, setFreight] = useState(0);
   const [freightLoading, setFreightLoading] = useState(false);
   const [loadingCheckout, setLoadingCheckout] = useState(false);
-
-  // Carrega dados do usuario se estiver logado
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        if (parsed.email) setEmail(parsed.email);
-        
-        if (parsed.name) {
-          const nameParts = parsed.name.trim().split(' ');
-          if (nameParts.length > 0) {
-            setFirstName(nameParts[0]);
-            if (nameParts.length > 1) {
-              setLastName(nameParts.slice(1).join(' '));
-            }
-          }
-        }
-      } catch (e) {
-        console.error("Erro ao ler dados do usuário logado", e);
-      }
-    }
-  }, []);
 
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({ message, type });
