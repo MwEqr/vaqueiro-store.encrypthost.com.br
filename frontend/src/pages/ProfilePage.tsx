@@ -228,6 +228,21 @@ export default function ProfilePage() {
                               </span>
                             </div>
                           </div>
+                          
+                          {order.status === 'pending' && (
+                            <div className="mb-6 p-4 bg-yellow-50 border border-yellow-100 rounded-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+                              <div className="text-xs text-yellow-800">
+                                <strong>Pagamento Pendente:</strong> Finalize sua compra para garantir seus produtos.
+                              </div>
+                              <button 
+                                onClick={() => window.location.href = order.payment_url}
+                                className="bg-premium-900 text-white px-6 py-2 text-xs font-bold uppercase tracking-widest hover:bg-premium-800 transition-colors shadow-sm"
+                              >
+                                Pagar Agora
+                              </button>
+                            </div>
+                          )}
+
                           <div className="space-y-2">
                             {order.items.map((item: any, idx: number) => (
                               <div key={idx} className="flex justify-between items-center text-sm">

@@ -43,6 +43,8 @@ if ($method === 'GET') {
                 'customer_name' => $o->billing->first_name . ' ' . $o->billing->last_name,
                 'customer_email' => $o->billing->email,
                 'payment_method' => $o->payment_method_title,
+                'order_key' => $o->order_key,
+                'payment_url' => WC_STORE_URL . '/checkout/order-pay/' . $o->id . '/?pay_for_order=true&key=' . $o->order_key,
                 'items' => array_map(function($i) {
                     return [
                         'name' => $i->name,
