@@ -1,5 +1,5 @@
 import { X, Eye, EyeOff, CheckCircle, LogOut } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { login, register } from '../services/api';
 

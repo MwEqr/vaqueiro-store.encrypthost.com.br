@@ -25,11 +25,16 @@ const ScrollToTop = () => {
   return null;
 };
 
-const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const location = useLocation();
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+interface LayoutProps {
+  children: React.ReactNode;
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
+  isLoginOpen: boolean;
+  setIsLoginOpen: (open: boolean) => void;
+}
 
+const Layout: React.FC<LayoutProps> = ({ children, isCartOpen, setIsCartOpen, isLoginOpen, setIsLoginOpen }) => {
+  const location = useLocation();
   const isAdminPage = location.pathname.startsWith('/admin');
 
   return (
@@ -62,10 +67,18 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export default function App() {
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
   return (
     <CartProvider>
       <Router>
-        <Layout>
+        <Layout 
+          isCartOpen={isCartOpen} 
+          setIsCartOpen={setIsCartOpen} 
+          isLoginOpen={isLoginOpen} 
+          setIsLoginOpen={setIsLoginOpen}
+        >
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/colecao" element={<CollectionPage />} />
