@@ -288,16 +288,16 @@ export default function CheckoutPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-xs font-medium text-premium-700 mb-1">E-mail</label>
-                  <input type="email" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="seu@email.com" />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" placeholder="seu@email.com" />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-medium text-premium-700 mb-1">Nome</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
+                    <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-premium-700 mb-1">Sobrenome</label>
-                    <input type="text" className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
+                    <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} className="w-full border border-premium-200 px-4 py-3 focus:outline-none focus:border-accent-dark focus:ring-1 focus:ring-accent-dark text-sm transition-all" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
